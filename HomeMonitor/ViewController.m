@@ -9,19 +9,41 @@
 #import "ViewController.h"
 
 @interface ViewController ()
+{
+ 
+    NSTimer* accessWebsiteTimer;
+}
+@property (strong,nonatomic) NSMutableDictionary* data;
+
 
 @end
+
+
+
+
 
 @implementation ViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+    
+    //start the timers
+    if (accessWebsiteTimer==nil) {
+        accessWebsiteTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(accessWebsite) userInfo:nil repeats:YES];
+    }
+    
+    
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+-(void)accessWebsite
+{
+    NSLog(@"accessing the website");
 }
 
 @end
