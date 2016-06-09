@@ -27,6 +27,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+    //test the version control
     
     //start the timers
     if (accessWebsiteTimer==nil) {
