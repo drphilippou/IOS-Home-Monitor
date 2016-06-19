@@ -7,6 +7,7 @@
 //
 
 #import "ViewController.h"
+#import "IOSTimeFunctions.h"
 
 @interface ViewController ()
 {
@@ -16,6 +17,7 @@
     NSURLConnection* webConnection;
     NSMutableData* webData;
     long lastRxSec;
+    IOSTimeFunctions* TF;
 
 }
 @property (strong,nonatomic) NSMutableDictionary* data;
@@ -38,6 +40,7 @@
     
     //init variables
     lastRxSec = 0;
+    TF = [[IOSTimeFunctions alloc] init];
     
     
     //start the timers
@@ -140,14 +143,17 @@
     webConnection = nil;
     //[self updateVehiclesEnd:vehicleData];
     
-    NSDictionary *rxJSON = [NSJSONSerialization JSONObjectWithData:webData
-                                                                 options:0
-                                                                   error:nil];
+    NSDictionary *rxJSON = [NSJSONSerialization JSONObjectWithData:webData options:0 error:nil];
+    
+
     for (NSString* k in rxJSON) {
-        NSLog(k);
+        NSLog(@"%@",k);
         NSDictionary* d = rxJSON[k];
-        NSLog(d.description);
+        NSLog(@"%@",d.description);
         long secs = [[d objectForKey:@"secs"] longLongValue];
+        NSLog(@"%@",[TF localDateYYYYMMDD:secs]);
+        NSLog(@"%@",[TF localTimehhmmssa:secs]);
+        NSLog(@"year %d month %d",[TF year:secs],[TF month:secs]);
         if (secs >lastRxSec) {
             lastRxSec = secs;
         }

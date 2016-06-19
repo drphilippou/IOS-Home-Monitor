@@ -15,6 +15,7 @@
 		DAF5C2AD1D0789EE00DF2F7E /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DAF5C2AC1D0789EE00DF2F7E /* Images.xcassets */; };
 		DAF5C2B01D0789EE00DF2F7E /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = DAF5C2AE1D0789EE00DF2F7E /* LaunchScreen.xib */; };
 		DAF5C2BC1D0789EF00DF2F7E /* HomeMonitorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DAF5C2BB1D0789EF00DF2F7E /* HomeMonitorTests.m */; };
+		DAF5C30F1D1675E000DF2F7E /* IOSTimeFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = DAF5C30E1D1675E000DF2F7E /* IOSTimeFunctions.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,6 +43,8 @@
 		DAF5C2B51D0789EF00DF2F7E /* HomeMonitorTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HomeMonitorTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DAF5C2BA1D0789EF00DF2F7E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DAF5C2BB1D0789EF00DF2F7E /* HomeMonitorTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HomeMonitorTests.m; sourceTree = "<group>"; };
+		DAF5C30D1D1675E000DF2F7E /* IOSTimeFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IOSTimeFunctions.h; sourceTree = "<group>"; };
+		DAF5C30E1D1675E000DF2F7E /* IOSTimeFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IOSTimeFunctions.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,6 +86,8 @@
 		DAF5C29B1D0789EE00DF2F7E /* HomeMonitor */ = {
 			isa = PBXGroup;
 			children = (
+				DAF5C30D1D1675E000DF2F7E /* IOSTimeFunctions.h */,
+				DAF5C30E1D1675E000DF2F7E /* IOSTimeFunctions.m */,
 				DAF5C2A01D0789EE00DF2F7E /* AppDelegate.h */,
 				DAF5C2A11D0789EE00DF2F7E /* AppDelegate.m */,
 				DAF5C2A61D0789EE00DF2F7E /* ViewController.h */,
@@ -226,6 +231,7 @@
 				DAF5C2A21D0789EE00DF2F7E /* AppDelegate.m in Sources */,
 				DAF5C2A81D0789EE00DF2F7E /* ViewController.m in Sources */,
 				DAF5C29F1D0789EE00DF2F7E /* main.m in Sources */,
+				DAF5C30F1D1675E000DF2F7E /* IOSTimeFunctions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
