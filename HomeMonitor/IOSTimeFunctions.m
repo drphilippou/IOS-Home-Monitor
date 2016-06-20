@@ -37,7 +37,7 @@
 
 
 -(NSTimeInterval)currentTimeSec {
-    return [[NSDate date] timeIntervalSinceReferenceDate];
+    return [[NSDate date] timeIntervalSince1970];
 }
 
 -(long)currentMinOfDay {
@@ -80,12 +80,12 @@
 
 
 -(NSString*)localTimeI:(NSTimeInterval)interval{
-    NSDate* date = [[NSDate alloc] initWithTimeIntervalSinceReferenceDate:interval];
+    NSDate* date = [[NSDate alloc] initWithTimeIntervalSince1970:interval];
     return [self localTime:date];
 }
 
 -(NSString*)localTimehhmmssa:(NSTimeInterval)secs {
-    NSDate* date = [[NSDate alloc] initWithTimeIntervalSinceReferenceDate:secs];
+    NSDate* date = [[NSDate alloc] initWithTimeIntervalSince1970:secs];
     //NSTimeZone* tz = [NSTimeZone timeZoneWithName:@"HST"];
     [DF setDateFormat:@"hh:mm:ss a"];
     [DF setTimeZone:TZ];
@@ -100,7 +100,7 @@
 
 
 -(NSString*)localTimeHHmmss:(NSTimeInterval)secs {
-    NSDate* date = [[NSDate alloc] initWithTimeIntervalSinceReferenceDate:secs];
+    NSDate* date = [[NSDate alloc] initWithTimeIntervalSince1970:secs];
     //NSTimeZone* tz = [NSTimeZone timeZoneWithName:@"HST"];
     [DF setDateFormat:@"HH:mm:ss"];
     [DF setTimeZone:TZ];

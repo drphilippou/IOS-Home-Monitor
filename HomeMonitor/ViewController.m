@@ -11,16 +11,19 @@
 
 @interface ViewController ()
 {
- 
 
     NSTimer* accessWebsiteTimer;
     NSURLConnection* webConnection;
+    BOOL downloadingHistory;
+    NSString* requestedFilename;
+    NSString* receivedFilename;
     NSMutableData* webData;
-    long lastRxSec;
+    NSTimeInterval lastRxSec;
     IOSTimeFunctions* TF;
 
 }
 @property (strong,nonatomic) NSMutableDictionary* data;
+
 
 
 @end
@@ -41,15 +44,23 @@
     //init variables
     lastRxSec = 0;
     TF = [[IOSTimeFunctions alloc] init];
+    downloadingHistory = FALSE;
+    requestedFilename = @"";
+    receivedFilename = @"";
     
     
-    //start the timers
-    if (accessWebsiteTimer==nil) {
-        accessWebsiteTimer = [NSTimer scheduledTimerWithTimeInterval:60 target:self selector:@selector(accessWebsite) userInfo:nil repeats:YES];
+    //do we need to load any File History?
+    NSTimeInterval now = [TF currentTimeSec];
+    if ((now - lastRxSec)>60*60*24) {
+        //start downloading history
+        downloadingHistory = TRUE;
+        
+        //start the timers to download history
+        if (accessWebsiteTimer==nil) {
+            accessWebsiteTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(requestHistoryStart) userInfo:nil repeats:YES];
+        }
     }
     
-    //download the first instance
-    [self accessWebsite];
     
 }
 
@@ -58,30 +69,81 @@
     // Dispose of any resources that can be recreated.
 }
 
--(void)accessWebsite
+
+
+-(void)requestHistoryStart {
+    
+    //check to see if we are already downloading a file
+    if (!webConnection) {
+        //calculate the next needed history file
+        NSTimeInterval now = [TF currentTimeSec];
+        int cyear = [TF year:now];
+        int cmonth = [TF month:now];
+        int year = 2014;
+        int month = 4;
+        if (lastRxSec >0) {
+            year = [TF year:lastRxSec];
+            month = [TF month:lastRxSec];
+        }
+        
+        //check if we are current
+        int cdate = cyear*100+cmonth;
+        int date = year*100 + month;
+        if (cdate == date) {
+            NSLog(@"we are caught up");
+        } else {
+            
+            if ([requestedFilename isEqualToString:@""]) {
+                //first file requested is the same month as the last data record
+                requestedFilename = [NSString stringWithFormat:@"%d.json",date];
+            } else {
+                //not the first file requested
+                //increment the month from the last file requested
+                int r = [requestedFilename integerValue];
+                int y = r/100;
+                int m = r-y*100;
+                m++;
+                if (m==13) {
+                    y++;
+                    m=1;
+                }
+                date = y*100+m;
+                requestedFilename = [NSString stringWithFormat:@"%d.json",date];
+                
+            }
+        NSLog(@"Requested Filename %@",requestedFilename);
+            
+        NSURL *url = [NSURL URLWithString:@"http://ios-hawaii.org/20166.json"];
+        [self accessWebsite:url];
+        }
+    } else {
+        NSLog(@"we are already downloading a file");
+    }
+    
+}
+
+-(void)accessWebsite:(NSURL*)url
 {
     NSLog(@"accessing the website");
     
-//    if (webConnection != nil) {
-//        NSTimeInterval now = [self currentTimeSec];
-//        NSTimeInterval elapsed = now - updateWebTime;
-//        NSLog(@"OBRDS Update Vehicle Start... UPdate in progress %f",elapsed);
-//        
-//        if (elapsed>30) {
-//            NSLog(@"Update Vehicle timed out restarting");
-//            vehicleConnection = nil;
-//            vehicleData = nil;
-//        }
-//        return;
-//    }
 
-    //determine how much history we need
+//    
+//    //load the past history if needed
+//    NSTimeInterval elapsed = now - lastRxSec;
+//    if (elapsed > 60*60*24) {
+//        //past 24 hours, need to load history
+//        int m = month;
+//        int y = year;
+//        while (m!=cmonth || y!=cyear) {
+//            NSLog(@"file = %d%d",y,m);
+//            m++;
+//            if (m==13) {
+//                m=1;
+//                y++;
+//            }
+//        }
+//    }
     
-    
-    
-    //set the URL
-    //NSURL *url = [NSURL URLWithString:@"http://OBRuser:OBRUserPassword@ios-hawaii.com/OBRroot/allvehicles.json"];
-    NSURL *url = [NSURL URLWithString:@"http://ios-hawaii.org/20165.json"];
     
     //set the start time
     //updateWebTime = [self currentTimeSec];
@@ -126,7 +188,7 @@
 - (void)connection:(NSURLConnection *)conn didReceiveData:(NSData *)d {
     
     [webData appendData:d];
-    NSLog(@"received data len:%lu", (unsigned long)webData.length);
+    //NSLog(@"received data len:%lu", (unsigned long)webData.length);
 }
 
 
@@ -140,20 +202,23 @@
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)conn {
     NSLog(@"did finish loading");
-    webConnection = nil;
-    //[self updateVehiclesEnd:vehicleData];
-    
+
+    //convert back to a dictionary
     NSDictionary *rxJSON = [NSJSONSerialization JSONObjectWithData:webData options:0 error:nil];
     
+    //shut down the web connection
+    webConnection = nil;
 
+    //parse
+    NSLog(@"Parsing the rx");
     for (NSString* k in rxJSON) {
-        NSLog(@"%@",k);
+        //NSLog(@"%@",k);
         NSDictionary* d = rxJSON[k];
-        NSLog(@"%@",d.description);
+        //NSLog(@"%@",d.description);
         long secs = [[d objectForKey:@"secs"] longLongValue];
-        NSLog(@"%@",[TF localDateYYYYMMDD:secs]);
-        NSLog(@"%@",[TF localTimehhmmssa:secs]);
-        NSLog(@"year %d month %d",[TF year:secs],[TF month:secs]);
+        //NSLog(@"%@",[TF localDateYYYYMMDD:secs]);
+        //NSLog(@"%@",[TF localTimehhmmssa:secs]);
+        //NSLog(@"year %d month %d",[TF year:secs],[TF month:secs]);
         if (secs >lastRxSec) {
             lastRxSec = secs;
         }
