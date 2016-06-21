@@ -428,6 +428,7 @@
 				DAF5C2C11D0789EF00DF2F7E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		DAF5C2C21D0789EF00DF2F7E /* Build configuration list for PBXNativeTarget "HomeMonitorTests" */ = {
 			isa = XCConfigurationList;
@@ -436,6 +437,7 @@
 				DAF5C2C41D0789EF00DF2F7E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 

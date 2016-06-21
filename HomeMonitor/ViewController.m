@@ -12,7 +12,7 @@
 @interface ViewController ()
 {
 
-    NSTimer* accessWebsiteTimer;
+    NSTimer* downloadHistoryTimer;
     NSURLConnection* webConnection;
     BOOL downloadingHistory;
     NSString* requestedFilename;
@@ -56,12 +56,12 @@
         downloadingHistory = TRUE;
         
         //start the timers to download history
-        if (accessWebsiteTimer==nil) {
-            accessWebsiteTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(requestHistoryStart) userInfo:nil repeats:YES];
+        if (downloadHistoryTimer==nil) {
+            downloadHistoryTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(requestHistoryStart) userInfo:nil repeats:YES];
         }
+        
+        [self requestHistoryStart];
     }
-    
-    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -75,25 +75,35 @@
     
     //check to see if we are already downloading a file
     if (!webConnection) {
-        //calculate the next needed history file
+        
+        //compute the current dateStr
         NSTimeInterval now = [TF currentTimeSec];
         int cyear = [TF year:now];
         int cmonth = [TF month:now];
-        int year = 2014;
-        int month = 4;
-        if (lastRxSec >0) {
-            year = [TF year:lastRxSec];
-            month = [TF month:lastRxSec];
-        }
-        
-        //check if we are current
         int cdate = cyear*100+cmonth;
-        int date = year*100 + month;
-        if (cdate == date) {
-            NSLog(@"we are caught up");
+        NSString *dateStr = [NSString stringWithFormat:@"%d.json",cdate];
+
+        //check if we are current
+        if ([dateStr isEqualToString:requestedFilename]) {
+            //we have requested the last History file
+            // now stop the process
+            downloadingHistory = false;
+            [downloadHistoryTimer invalidate];
+            downloadHistoryTimer = nil;
+            NSLog(@"we are caught up... stopping process");
         } else {
             
             if ([requestedFilename isEqualToString:@""]) {
+                int year = 2016;
+                int month = 4;
+                if (lastRxSec >0) {
+                    year = [TF year:lastRxSec];
+                    month = [TF month:lastRxSec];
+                }
+                int date = year *100 + month;
+                
+                
+                
                 //first file requested is the same month as the last data record
                 requestedFilename = [NSString stringWithFormat:@"%d.json",date];
             } else {
@@ -107,14 +117,16 @@
                     y++;
                     m=1;
                 }
-                date = y*100+m;
+                int date = y*100+m;
                 requestedFilename = [NSString stringWithFormat:@"%d.json",date];
                 
             }
-        NSLog(@"Requested Filename %@",requestedFilename);
+            NSLog(@"Requested Filename %@",requestedFilename);
+            NSString* urlStr = [NSString stringWithFormat:@"http://ios-hawaii.org/%@",requestedFilename];
             
-        NSURL *url = [NSURL URLWithString:@"http://ios-hawaii.org/20166.json"];
-        [self accessWebsite:url];
+            //NSURL *url = [NSURL URLWithString:@"http://ios-hawaii.org/20166.json"];
+            NSURL *url = [NSURL URLWithString:urlStr];
+            [self accessWebsite:url];
         }
     } else {
         NSLog(@"we are already downloading a file");
@@ -210,7 +222,7 @@
     webConnection = nil;
 
     //parse
-    NSLog(@"Parsing the rx");
+    NSLog(@"Parsing the rx %lu entries",(unsigned long)rxJSON.count);
     for (NSString* k in rxJSON) {
         //NSLog(@"%@",k);
         NSDictionary* d = rxJSON[k];
