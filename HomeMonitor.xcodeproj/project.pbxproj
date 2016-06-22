@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DA74B92A1D1A48F0009D6F15 /* HMDownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = DA74B9291D1A48F0009D6F15 /* HMDownloadManager.m */; };
 		DAF5C29F1D0789EE00DF2F7E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = DAF5C29E1D0789EE00DF2F7E /* main.m */; };
 		DAF5C2A21D0789EE00DF2F7E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = DAF5C2A11D0789EE00DF2F7E /* AppDelegate.m */; };
 		DAF5C2A51D0789EE00DF2F7E /* HomeMonitor.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = DAF5C2A31D0789EE00DF2F7E /* HomeMonitor.xcdatamodeld */; };
@@ -29,6 +30,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		DA74B9281D1A48F0009D6F15 /* HMDownloadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HMDownloadManager.h; path = ../HMDownloadManager.h; sourceTree = "<group>"; };
+		DA74B9291D1A48F0009D6F15 /* HMDownloadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HMDownloadManager.m; path = ../HMDownloadManager.m; sourceTree = "<group>"; };
 		DAF5C2991D0789EE00DF2F7E /* HomeMonitor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HomeMonitor.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DAF5C29D1D0789EE00DF2F7E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DAF5C29E1D0789EE00DF2F7E /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -92,6 +95,8 @@
 				DAF5C2A11D0789EE00DF2F7E /* AppDelegate.m */,
 				DAF5C2A61D0789EE00DF2F7E /* ViewController.h */,
 				DAF5C2A71D0789EE00DF2F7E /* ViewController.m */,
+				DA74B9281D1A48F0009D6F15 /* HMDownloadManager.h */,
+				DA74B9291D1A48F0009D6F15 /* HMDownloadManager.m */,
 				DAF5C2A91D0789EE00DF2F7E /* Main.storyboard */,
 				DAF5C2AC1D0789EE00DF2F7E /* Images.xcassets */,
 				DAF5C2AE1D0789EE00DF2F7E /* LaunchScreen.xib */,
@@ -231,6 +236,7 @@
 				DAF5C2A21D0789EE00DF2F7E /* AppDelegate.m in Sources */,
 				DAF5C2A81D0789EE00DF2F7E /* ViewController.m in Sources */,
 				DAF5C29F1D0789EE00DF2F7E /* main.m in Sources */,
+				DA74B92A1D1A48F0009D6F15 /* HMDownloadManager.m in Sources */,
 				DAF5C30F1D1675E000DF2F7E /* IOSTimeFunctions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
