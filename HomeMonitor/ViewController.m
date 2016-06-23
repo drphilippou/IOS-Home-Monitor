@@ -9,6 +9,7 @@
 #import "ViewController.h"
 #import "IOSTimeFunctions.h"
 #import "HMDownloadManager.h"
+#import "HMdataStore.h"
 
 @interface ViewController ()
 {
@@ -16,6 +17,7 @@
 
     IOSTimeFunctions* TF;
     HMDownloadManager* DM;
+    HMdataStore* DB;
 
 }
 @property (strong,nonatomic) NSMutableDictionary* data;
@@ -41,6 +43,24 @@
 
     TF = [[IOSTimeFunctions alloc] init];
     DM = [[HMDownloadManager alloc] init];
+    DB = [[HMdataStore alloc] init];
+    
+    //test the database
+    HMData* d = [DB createHMData];
+    d.pvSurplus =1;
+    d.zoeRoomHumidity = 2;
+    d.currPVPower = 3;
+    d.keliiRoomHumidity = 4;
+    
+    [DB saveDatabase];
+    
+    NSMutableArray* r = [DB getHMData];
+    for (HMData* v in r) {
+        //NSLog(v.description);
+        NSLog(@"surplus=%fld",v.secs);
+    }
+    
+    NSLog(@"Data= %@",r.description);
     
     
     //do we need to load any File History?

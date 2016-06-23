@@ -1,4 +1,23 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model name="Test1.xcdatamodel" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1" systemVersion="11A491" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
-    <elements/>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="9525" systemVersion="14F27" minimumToolsVersion="Automatic">
+    <entity name="HMData" representedClassName="HMData" syncable="YES">
+        <attribute name="currPVPower" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="date" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="dehumidEnergy" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="homeEnergy" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="homePower" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="keliiDehumidPower" optional="YES" attributeType="Float" defaultValueString="0" syncable="YES"/>
+        <attribute name="keliiRoomHumidity" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="pvEnergyToday" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="pvPred" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="pvSurplus" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="secs" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="shiller" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="time" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="zoeDehumidPower" optional="YES" attributeType="Float" defaultValueString="0" syncable="YES"/>
+        <attribute name="zoeRoomHumidity" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="HMData" positionX="-63" positionY="-18" width="128" height="270"/>
+    </elements>
 </model>

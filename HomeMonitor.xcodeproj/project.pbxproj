@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		DA74B92A1D1A48F0009D6F15 /* HMDownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = DA74B9291D1A48F0009D6F15 /* HMDownloadManager.m */; };
+		DA74B9301D1A744D009D6F15 /* HMdataStore.m in Sources */ = {isa = PBXBuildFile; fileRef = DA74B92E1D1A744D009D6F15 /* HMdataStore.m */; };
+		DA74B9351D1B0253009D6F15 /* HMData+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = DA74B9321D1B0253009D6F15 /* HMData+CoreDataProperties.m */; };
+		DA74B9361D1B0253009D6F15 /* HMData.m in Sources */ = {isa = PBXBuildFile; fileRef = DA74B9341D1B0253009D6F15 /* HMData.m */; };
 		DAF5C29F1D0789EE00DF2F7E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = DAF5C29E1D0789EE00DF2F7E /* main.m */; };
 		DAF5C2A21D0789EE00DF2F7E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = DAF5C2A11D0789EE00DF2F7E /* AppDelegate.m */; };
 		DAF5C2A51D0789EE00DF2F7E /* HomeMonitor.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = DAF5C2A31D0789EE00DF2F7E /* HomeMonitor.xcdatamodeld */; };
@@ -32,6 +35,12 @@
 /* Begin PBXFileReference section */
 		DA74B9281D1A48F0009D6F15 /* HMDownloadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HMDownloadManager.h; path = ../HMDownloadManager.h; sourceTree = "<group>"; };
 		DA74B9291D1A48F0009D6F15 /* HMDownloadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HMDownloadManager.m; path = ../HMDownloadManager.m; sourceTree = "<group>"; };
+		DA74B92E1D1A744D009D6F15 /* HMdataStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HMdataStore.m; path = ../../../OahuBusRoutes/OahuBusRoutes/HMdataStore.m; sourceTree = "<group>"; };
+		DA74B92F1D1A744D009D6F15 /* HMdataStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HMdataStore.h; path = ../../../OahuBusRoutes/OahuBusRoutes/HMdataStore.h; sourceTree = "<group>"; };
+		DA74B9311D1B0253009D6F15 /* HMData+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "HMData+CoreDataProperties.h"; sourceTree = "<group>"; };
+		DA74B9321D1B0253009D6F15 /* HMData+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "HMData+CoreDataProperties.m"; sourceTree = "<group>"; };
+		DA74B9331D1B0253009D6F15 /* HMData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HMData.h; sourceTree = "<group>"; };
+		DA74B9341D1B0253009D6F15 /* HMData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HMData.m; sourceTree = "<group>"; };
 		DAF5C2991D0789EE00DF2F7E /* HomeMonitor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HomeMonitor.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DAF5C29D1D0789EE00DF2F7E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DAF5C29E1D0789EE00DF2F7E /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -97,10 +106,16 @@
 				DAF5C2A71D0789EE00DF2F7E /* ViewController.m */,
 				DA74B9281D1A48F0009D6F15 /* HMDownloadManager.h */,
 				DA74B9291D1A48F0009D6F15 /* HMDownloadManager.m */,
+				DA74B92E1D1A744D009D6F15 /* HMdataStore.m */,
+				DA74B92F1D1A744D009D6F15 /* HMdataStore.h */,
 				DAF5C2A91D0789EE00DF2F7E /* Main.storyboard */,
 				DAF5C2AC1D0789EE00DF2F7E /* Images.xcassets */,
 				DAF5C2AE1D0789EE00DF2F7E /* LaunchScreen.xib */,
 				DAF5C2A31D0789EE00DF2F7E /* HomeMonitor.xcdatamodeld */,
+				DA74B9311D1B0253009D6F15 /* HMData+CoreDataProperties.h */,
+				DA74B9321D1B0253009D6F15 /* HMData+CoreDataProperties.m */,
+				DA74B9331D1B0253009D6F15 /* HMData.h */,
+				DA74B9341D1B0253009D6F15 /* HMData.m */,
 				DAF5C29C1D0789EE00DF2F7E /* Supporting Files */,
 			);
 			path = HomeMonitor;
@@ -232,10 +247,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DA74B9351D1B0253009D6F15 /* HMData+CoreDataProperties.m in Sources */,
 				DAF5C2A51D0789EE00DF2F7E /* HomeMonitor.xcdatamodeld in Sources */,
 				DAF5C2A21D0789EE00DF2F7E /* AppDelegate.m in Sources */,
+				DA74B9361D1B0253009D6F15 /* HMData.m in Sources */,
 				DAF5C2A81D0789EE00DF2F7E /* ViewController.m in Sources */,
 				DAF5C29F1D0789EE00DF2F7E /* main.m in Sources */,
+				DA74B9301D1A744D009D6F15 /* HMdataStore.m in Sources */,
 				DA74B92A1D1A48F0009D6F15 /* HMDownloadManager.m in Sources */,
 				DAF5C30F1D1675E000DF2F7E /* IOSTimeFunctions.m in Sources */,
 			);
