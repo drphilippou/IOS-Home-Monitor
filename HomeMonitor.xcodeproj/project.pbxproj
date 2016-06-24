@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DA3D292C1D1DE94000F4FF9A /* brachtest.m in Sources */ = {isa = PBXBuildFile; fileRef = DA3D292B1D1DE94000F4FF9A /* brachtest.m */; };
 		DA74B92A1D1A48F0009D6F15 /* HMDownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = DA74B9291D1A48F0009D6F15 /* HMDownloadManager.m */; };
 		DA74B9351D1B0253009D6F15 /* HMData+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = DA74B9321D1B0253009D6F15 /* HMData+CoreDataProperties.m */; };
 		DA74B9361D1B0253009D6F15 /* HMData.m in Sources */ = {isa = PBXBuildFile; fileRef = DA74B9341D1B0253009D6F15 /* HMData.m */; };
@@ -33,6 +34,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		DA3D292A1D1DE94000F4FF9A /* brachtest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = brachtest.h; sourceTree = "<group>"; };
+		DA3D292B1D1DE94000F4FF9A /* brachtest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = brachtest.m; sourceTree = "<group>"; };
 		DA74B9281D1A48F0009D6F15 /* HMDownloadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HMDownloadManager.h; path = ../HMDownloadManager.h; sourceTree = "<group>"; };
 		DA74B9291D1A48F0009D6F15 /* HMDownloadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HMDownloadManager.m; path = ../HMDownloadManager.m; sourceTree = "<group>"; };
 		DA74B9311D1B0253009D6F15 /* HMData+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "HMData+CoreDataProperties.h"; sourceTree = "<group>"; };
@@ -108,6 +111,8 @@
 				DA74B9291D1A48F0009D6F15 /* HMDownloadManager.m */,
 				DA7728C71D1C961300670EEC /* HMdataStore.h */,
 				DA7728C81D1C961300670EEC /* HMdataStore.m */,
+				DA3D292A1D1DE94000F4FF9A /* brachtest.h */,
+				DA3D292B1D1DE94000F4FF9A /* brachtest.m */,
 				DAF5C2A91D0789EE00DF2F7E /* Main.storyboard */,
 				DAF5C2AC1D0789EE00DF2F7E /* Images.xcassets */,
 				DAF5C2AE1D0789EE00DF2F7E /* LaunchScreen.xib */,
@@ -251,6 +256,7 @@
 				DAF5C2A51D0789EE00DF2F7E /* HomeMonitor.xcdatamodeld in Sources */,
 				DAF5C2A21D0789EE00DF2F7E /* AppDelegate.m in Sources */,
 				DA74B9361D1B0253009D6F15 /* HMData.m in Sources */,
+				DA3D292C1D1DE94000F4FF9A /* brachtest.m in Sources */,
 				DAF5C2A81D0789EE00DF2F7E /* ViewController.m in Sources */,
 				DAF5C29F1D0789EE00DF2F7E /* main.m in Sources */,
 				DA74B92A1D1A48F0009D6F15 /* HMDownloadManager.m in Sources */,
