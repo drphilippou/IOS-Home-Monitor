@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DA3D292F1D1DE9F400F4FF9A /* junkfile.m in Sources */ = {isa = PBXBuildFile; fileRef = DA3D292E1D1DE9F400F4FF9A /* junkfile.m */; };
 		DA74B92A1D1A48F0009D6F15 /* HMDownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = DA74B9291D1A48F0009D6F15 /* HMDownloadManager.m */; };
 		DA74B9351D1B0253009D6F15 /* HMData+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = DA74B9321D1B0253009D6F15 /* HMData+CoreDataProperties.m */; };
 		DA74B9361D1B0253009D6F15 /* HMData.m in Sources */ = {isa = PBXBuildFile; fileRef = DA74B9341D1B0253009D6F15 /* HMData.m */; };
@@ -33,6 +34,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		DA3D292D1D1DE9F400F4FF9A /* junkfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = junkfile.h; sourceTree = "<group>"; };
+		DA3D292E1D1DE9F400F4FF9A /* junkfile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = junkfile.m; sourceTree = "<group>"; };
 		DA74B9281D1A48F0009D6F15 /* HMDownloadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HMDownloadManager.h; path = ../HMDownloadManager.h; sourceTree = "<group>"; };
 		DA74B9291D1A48F0009D6F15 /* HMDownloadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HMDownloadManager.m; path = ../HMDownloadManager.m; sourceTree = "<group>"; };
 		DA74B9311D1B0253009D6F15 /* HMData+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "HMData+CoreDataProperties.h"; sourceTree = "<group>"; };
@@ -80,6 +83,8 @@
 		DAF5C2901D0789EE00DF2F7E = {
 			isa = PBXGroup;
 			children = (
+				DA3D292D1D1DE9F400F4FF9A /* junkfile.h */,
+				DA3D292E1D1DE9F400F4FF9A /* junkfile.m */,
 				DAF5C29B1D0789EE00DF2F7E /* HomeMonitor */,
 				DAF5C2B81D0789EF00DF2F7E /* HomeMonitorTests */,
 				DAF5C29A1D0789EE00DF2F7E /* Products */,
@@ -256,6 +261,7 @@
 				DA74B92A1D1A48F0009D6F15 /* HMDownloadManager.m in Sources */,
 				DAF5C30F1D1675E000DF2F7E /* IOSTimeFunctions.m in Sources */,
 				DA7728C91D1C961300670EEC /* HMdataStore.m in Sources */,
+				DA3D292F1D1DE9F400F4FF9A /* junkfile.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
