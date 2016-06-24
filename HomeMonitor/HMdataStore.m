@@ -18,6 +18,7 @@
 @property (nonatomic,strong) NSManagedObjectModel *model;
 
 
+
 @end
 
 
@@ -25,6 +26,34 @@
 @implementation HMdataStore
 @synthesize context;
 @synthesize model;
+
+
+//-(NSMutableArray*)entries {
+//    if (!_entries) {
+//        //create an array to hold the data
+//        NSMutableArray* out = [[NSMutableArray alloc] init];
+//        
+//        //create the request
+//        NSEntityDescription *e = [[model entitiesByName] objectForKey:@"HMData"];
+//        NSFetchRequest *rq = [[NSFetchRequest alloc] init];
+//        
+//        
+//        [rq setEntity:e];
+//         //[rq setReturnsObjectsAsFaults:false];
+//        
+//        //retrieve the data
+//        NSArray* res;
+//        res = [context executeFetchRequest:rq error:nil];
+//        
+//        //stroe the date in the output array
+//        if (res.count>0) {
+//            out = [[NSMutableArray alloc] initWithArray:res];
+//        }
+//  
+//    }
+//    return _entries;
+//}
+
 
 #pragma mark init
 
@@ -62,7 +91,7 @@
     //create the address for the database in the documents directory
     NSArray* docDirs = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString* docDir = [docDirs objectAtIndex:0];
-    NSString* DBPath = [docDir stringByAppendingPathComponent:@"HMstore2.data"];
+    NSString* DBPath = [docDir stringByAppendingPathComponent:@"HMstore4.data"];
     NSURL* storeURL = [NSURL fileURLWithPath:DBPath];
     
     //create the model and the coordinator
@@ -112,7 +141,14 @@
 
 
 
-
+-(HMData*)getHMDataAtSecs1970:(NSTimeInterval)sec {
+    for (HMData* d in [self HMDataArray]) {
+        if (sec == d.secs) {
+            return d;
+        }
+    }
+    return nil;
+}
 
 
 -(HMData*)createHMData {
@@ -120,31 +156,38 @@
     
     //insert a new entry into the database
     d = [NSEntityDescription insertNewObjectForEntityForName:@"HMData" inManagedObjectContext:context];
+    [_HMDataArray addObject:d];
+    
     return d;
 }
 
 
 
--(NSMutableArray*)getHMData {
+-(NSMutableArray*)HMDataArray {
     
-    //create an array to hold the data
-    NSMutableArray* out = [[NSMutableArray alloc] init];
-    
-    //create the request
-    NSEntityDescription *e = [[model entitiesByName] objectForKey:@"HMData"];
-    NSFetchRequest *rq = [[NSFetchRequest alloc] init];
-    [rq setEntity:e];
-    //[rq setReturnsObjectsAsFaults:false];
-    
-    //retrieve the data
-    NSArray* res;
-    res = [context executeFetchRequest:rq error:nil];
-    
-    //stroe the date in the output array
-    if (res.count>0) {
-        out = [[NSMutableArray alloc] initWithArray:res];
+    if (!_HMDataArray) {
+        
+        //create the request
+        NSEntityDescription *e = [[model entitiesByName] objectForKey:@"HMData"];
+        NSFetchRequest *rq = [[NSFetchRequest alloc] init];
+        NSSortDescriptor *sd = [NSSortDescriptor
+                                sortDescriptorWithKey:@"secs"
+                                ascending:YES];
+        [rq setEntity:e];
+        [rq setSortDescriptors:[NSArray arrayWithObject:sd]];
+        
+        //[rq setReturnsObjectsAsFaults:false];
+        
+        //retrieve the data
+        NSArray* res;
+        res = [context executeFetchRequest:rq error:nil];
+        
+        //stroe the date in the output array
+        if (res.count>0) {
+            _HMDataArray = [[NSMutableArray alloc] initWithArray:res];
+        }
     }
-    return out;
+    return _HMDataArray;
 }
 
 

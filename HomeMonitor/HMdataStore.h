@@ -13,6 +13,7 @@
 
 @interface HMdataStore : NSObject <UIAlertViewDelegate>
 
+@property (nonatomic,strong) NSMutableArray* HMDataArray;
 
 
 +(HMdataStore *)defaultStore;
@@ -21,7 +22,7 @@
 //-(void)deleteObject:(NSManagedObject*) ob;
 
 -(HMData*)createHMData;
--(NSMutableArray*)getHMData;
+-(HMData*)getHMDataAtSecs1970:(NSTimeInterval)sec;
 
 
 

@@ -180,42 +180,48 @@
     //shut down the web connection
     webConnection = nil;
     
+    
     //parse
     NSLog(@"Parsing the rx %lu entries",(unsigned long)rxJSON.count);
+    int numAdded = 0;
     for (NSString* k in rxJSON) {
         
         NSDictionary* d = rxJSON[k];
         
-        
-        //create a new entry
-        HMData* da = [DB createHMData];
-        da.pvSurplus = [[d objectForKey:@"Surplus"] floatValue];
-        da.currPVPower = [[d objectForKey:@"PVCurPow"] integerValue];
-        da.keliiRoomHumidity = [[d objectForKey:@"KRH"] integerValue];
-        da.zoeRoomHumidity = [[d objectForKey:@"ZRH"] integerValue];
-        da.dehumidEnergy = [[d objectForKey:@"DehumidEnergy"] integerValue  ];
-        da.pvPred =[[d objectForKey:@"PVPred"] integerValue  ];
-        da.pvEnergyToday = [[d objectForKey:@"PVEngyToday"] integerValue  ];
-        da.zoeDehumidPower = [[d objectForKey:@"ZDP"] floatValue  ];
-        //da.time = [d.obje]
-        da.homeEnergy = [[d objectForKey:@"HomeEnergy"] integerValue  ];
-        da.keliiDehumidPower = [[d objectForKey:@"KDP"] floatValue  ];
-        da.homePower = [[d objectForKey:@"HomePower"] floatValue  ];
-        da.shiller = [[d objectForKey:@"Shiller"] floatValue  ];
-        da.secs = [[d objectForKey:@"secs"] longLongValue  ];
-        //@property (nullable, nonatomic, retain) NSString *date;
-       
         long secs = [[d objectForKey:@"secs"] longLongValue];
-        
-        
-        
-        //NSLog(@"%@",[TF localDateYYYYMMDD:secs]);
-        //NSLog(@"%@",[TF localTimehhmmssa:secs]);
-        //NSLog(@"year %d month %d",[TF year:secs],[TF month:secs]);
+        if (![DB getHMDataAtSecs1970:secs]) {
+            
+            //create a new entry
+            numAdded++;
+            HMData* da = [DB createHMData];
+            da.pvSurplus = [[d objectForKey:@"Surplus"] floatValue];
+            da.currPVPower = [[d objectForKey:@"PVCurPow"] integerValue];
+            da.keliiRoomHumidity = [[d objectForKey:@"KRH"] integerValue];
+            da.zoeRoomHumidity = [[d objectForKey:@"ZRH"] integerValue];
+            da.dehumidEnergy = [[d objectForKey:@"DehumidEnergy"] integerValue  ];
+            da.pvPred =[[d objectForKey:@"PVPred"] integerValue  ];
+            da.pvEnergyToday = [[d objectForKey:@"PVEngyToday"] integerValue  ];
+            da.zoeDehumidPower = [[d objectForKey:@"ZDP"] floatValue  ];
+            //da.time = [d.obje]
+            da.homeEnergy = [[d objectForKey:@"HomeEnergy"] integerValue  ];
+            da.keliiDehumidPower = [[d objectForKey:@"KDP"] floatValue  ];
+            da.homePower = [[d objectForKey:@"HomePower"] floatValue  ];
+            da.shiller = [[d objectForKey:@"Shiller"] floatValue  ];
+            da.secs = [[d objectForKey:@"secs"] longLongValue  ];
+            //@property (nullable, nonatomic, retain) NSString *date;
+            
+            
+            
+            
+            //NSLog(@"%@",[TF localDateYYYYMMDD:secs]);
+            //NSLog(@"%@",[TF localTimehhmmssa:secs]);
+            //NSLog(@"year %d month %d",[TF year:secs],[TF month:secs]);
+        }
         if (secs >self.lastRxSec) {
             self.lastRxSec = secs;
         }
     }
+    NSLog(@"%d, database entries added",numAdded);
     [DB saveDatabase];
     
     
