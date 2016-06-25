@@ -48,9 +48,14 @@
     
     //do we need to load any File History?
     NSTimeInterval now = [TF currentTimeSec];
-    if ((now - DM.lastRxSec)>60*60*24) {
+    NSTimeInterval lastRxSecs = DB.HMMetadataVal.lastEntrySecs;
+    NSLog(@"last RX SECs= %f",lastRxSecs);
+    if ((now - lastRxSecs)>3000) {
         //start downloading history
         [DM startDownloadingHistory];
+    } else {
+        //start the incremental download
+        [DM startDownloadingLatest];
     }
 }
 

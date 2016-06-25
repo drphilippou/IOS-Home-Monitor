@@ -7,15 +7,18 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "HMMetadata.h"
 
 @interface HMDownloadManager : NSObject
 
 @property(nonatomic) BOOL downloadingHistory;
-@property(nonatomic) NSTimeInterval lastRxSec;
+@property(nonatomic) BOOL downloadingLatest;
+@property(nonatomic) BOOL newDataAvailable;
 
 
 -(id)init;
 -(void)startDownloadingHistory;
+-(void)startDownloadingLatest;
     
 
 @end

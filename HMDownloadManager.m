@@ -19,7 +19,8 @@
     NSString* receivedFilename;
     NSMutableData* webData;
     NSTimer* downloadHistoryTimer;
-
+    NSTimer* downloadLatestTimer;
+    
     
 }
 @end
@@ -37,6 +38,7 @@
     receivedFilename = @"";
     TF = [[IOSTimeFunctions alloc] init];
     DB = [[HMdataStore alloc] init];
+    self.newDataAvailable = false;
     return self;
 }
 
@@ -47,6 +49,16 @@
         downloadHistoryTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(requestHistoryStart) userInfo:nil repeats:YES];
     }
     [self requestHistoryStart];
+
+}
+
+-(void)startDownloadingLatest {
+    NSLog(@"starting to download the latest values");
+    self.downloadingLatest = true;
+    if (!downloadLatestTimer) {
+        downloadLatestTimer = [NSTimer scheduledTimerWithTimeInterval:60 target:self selector:@selector(requestLatestStart) userInfo:nil repeats:YES];
+    }
+    [self requestLatestStart];
 
 }
 
@@ -71,14 +83,17 @@
             [downloadHistoryTimer invalidate];
             downloadHistoryTimer = nil;
             NSLog(@"we are caught up... stopping process");
+            
+            //start the incremental update
+            [self startDownloadingLatest];
         } else {
             
             if ([requestedFilename isEqualToString:@""]) {
                 int year = 2016;
                 int month = 4;
-                if (self.lastRxSec >0) {
-                    year = [TF year:self.lastRxSec];
-                    month = [TF month:self.lastRxSec];
+                if ([DB HMMetadataVal].lastEntrySecs >0) {
+                    year = [TF year:DB.HMMetadataVal.lastEntrySecs];
+                    month = [TF month:DB.HMMetadataVal.lastEntrySecs];
                 }
                 int date = year *100 + month;
                 
@@ -113,6 +128,25 @@
     }
 }
 
+
+-(void)requestLatestStart {
+    
+    //check to see if we are already downloading a file
+    if (!webConnection) {
+        
+        requestedFilename = @"CurrentHour.json";
+        NSLog(@"Requested Filename %@",requestedFilename);
+        NSString* urlStr = [NSString stringWithFormat:@"http://ios-hawaii.org/currentHour.json"];
+        
+        NSURL *url = [NSURL URLWithString:urlStr];
+        [self accessWebsite:url];
+        
+    } else {
+        NSLog(@"DL we are already downloading a file");
+    }
+}
+
+
 -(void)accessWebsite:(NSURL*)url
 {
     NSLog(@"accessing the website");
@@ -132,6 +166,11 @@
     
 }
 
+//do not let the application cache any data
+- (NSCachedURLResponse *)connection:(NSURLConnection *)connection willCacheResponse:(NSCachedURLResponse *)cachedResponse {
+    return nil;
+}
+
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
     
@@ -143,9 +182,10 @@
     NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse*)response;
     if ([response respondsToSelector:@selector(allHeaderFields)]) {
         d = [httpResponse allHeaderFields];
+        //NSLog(@"response=%@",d);
         eTag = d[@"Etag"];
     }
-    
+
     //    if (eTag != nil && [eTag isEqualToString:lastVehicleEtag]) {
     //        [connection cancel];
     //        vehicleConnection = nil;
@@ -155,13 +195,11 @@
     //        lastVehicleEtag = [eTag copy];
     //    }
 }
-
 - (void)connection:(NSURLConnection *)conn didReceiveData:(NSData *)d {
     
     [webData appendData:d];
     //NSLog(@"received data len:%lu", (unsigned long)webData.length);
 }
-
 
 - (void)connection:(NSURLConnection *)conn didFailWithError:(NSError *)error {
     
@@ -188,40 +226,37 @@
         
         NSDictionary* d = rxJSON[k];
         
-        long secs = [[d objectForKey:@"secs"] longLongValue];
+        float secs = [[d objectForKey:@"secs"] floatValue];
+        //NSLog(@"rx key,date = %ld, %@",(long)secs,[d objectForKey:@"time"]);
         if (![DB getHMDataAtSecs1970:secs]) {
             
             //create a new entry
             numAdded++;
             HMData* da = [DB createHMData];
             da.pvSurplus = [[d objectForKey:@"Surplus"] floatValue];
-            da.currPVPower = [[d objectForKey:@"PVCurPow"] integerValue];
-            da.keliiRoomHumidity = [[d objectForKey:@"KRH"] integerValue];
-            da.zoeRoomHumidity = [[d objectForKey:@"ZRH"] integerValue];
-            da.dehumidEnergy = [[d objectForKey:@"DehumidEnergy"] integerValue  ];
-            da.pvPred =[[d objectForKey:@"PVPred"] integerValue  ];
-            da.pvEnergyToday = [[d objectForKey:@"PVEngyToday"] integerValue  ];
+            da.currPVPower = [[d objectForKey:@"PVCurPow"] intValue];
+            da.keliiRoomHumidity = [[d objectForKey:@"KRH"] intValue];
+            da.zoeRoomHumidity = [[d objectForKey:@"ZRH"] intValue];
+            da.dehumidEnergy = [[d objectForKey:@"DehumidEnergy"] intValue  ];
+            da.pvPred =[[d objectForKey:@"PVPred"] intValue  ];
+            da.pvEnergyToday = [[d objectForKey:@"PVEngyToday"] intValue  ];
             da.zoeDehumidPower = [[d objectForKey:@"ZDP"] floatValue  ];
-            //da.time = [d.obje]
+            da.time = [[d objectForKey:@"time"] copy];
             da.homeEnergy = [[d objectForKey:@"HomeEnergy"] integerValue  ];
             da.keliiDehumidPower = [[d objectForKey:@"KDP"] floatValue  ];
             da.homePower = [[d objectForKey:@"HomePower"] floatValue  ];
             da.shiller = [[d objectForKey:@"Shiller"] floatValue  ];
-            da.secs = [[d objectForKey:@"secs"] longLongValue  ];
-            //@property (nullable, nonatomic, retain) NSString *date;
+            da.secs = [[d objectForKey:@"secs"] floatValue  ];
+            da.date = [[d objectForKey:@"date"] copy];;
             
-            
-            
-            
-            //NSLog(@"%@",[TF localDateYYYYMMDD:secs]);
-            //NSLog(@"%@",[TF localTimehhmmssa:secs]);
-            //NSLog(@"year %d month %d",[TF year:secs],[TF month:secs]);
+            //let the other classes know we have entered new data
+            self.newDataAvailable = true;
         }
-        if (secs >self.lastRxSec) {
-            self.lastRxSec = secs;
+        if (secs > [DB HMMetadataVal].lastEntrySecs) {
+            [DB HMMetadataVal].lastEntrySecs = secs;
         }
     }
-    NSLog(@"%d, database entries added",numAdded);
+    NSLog(@"%d database entries added",numAdded);
     [DB saveDatabase];
     
     

@@ -28,31 +28,6 @@
 @synthesize model;
 
 
-//-(NSMutableArray*)entries {
-//    if (!_entries) {
-//        //create an array to hold the data
-//        NSMutableArray* out = [[NSMutableArray alloc] init];
-//        
-//        //create the request
-//        NSEntityDescription *e = [[model entitiesByName] objectForKey:@"HMData"];
-//        NSFetchRequest *rq = [[NSFetchRequest alloc] init];
-//        
-//        
-//        [rq setEntity:e];
-//         //[rq setReturnsObjectsAsFaults:false];
-//        
-//        //retrieve the data
-//        NSArray* res;
-//        res = [context executeFetchRequest:rq error:nil];
-//        
-//        //stroe the date in the output array
-//        if (res.count>0) {
-//            out = [[NSMutableArray alloc] initWithArray:res];
-//        }
-//  
-//    }
-//    return _entries;
-//}
 
 
 #pragma mark init
@@ -91,7 +66,7 @@
     //create the address for the database in the documents directory
     NSArray* docDirs = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString* docDir = [docDirs objectAtIndex:0];
-    NSString* DBPath = [docDir stringByAppendingPathComponent:@"HMstore4.data"];
+    NSString* DBPath = [docDir stringByAppendingPathComponent:@"HMstore5.data"];
     NSURL* storeURL = [NSURL fileURLWithPath:DBPath];
     
     //create the model and the coordinator
@@ -162,6 +137,30 @@
 }
 
 
+-(HMMetadata*)HMMetadataVal {
+    if (!_HMMetadataVal) {
+        //create the request
+        NSEntityDescription *e = [[model entitiesByName] objectForKey:@"HMMetadata"];
+        NSFetchRequest *rq = [[NSFetchRequest alloc] init];
+        [rq setEntity:e];
+        [rq setReturnsObjectsAsFaults:false];
+        
+        //retrieve the data
+        NSArray* res;
+        res = [context executeFetchRequest:rq error:nil];
+        
+        //stroe the date in the output array
+        if (res.count>0) {
+            _HMMetadataVal = [res firstObject];
+        } else {
+            _HMMetadataVal = [NSEntityDescription insertNewObjectForEntityForName:@"HMMetadata" inManagedObjectContext:context];
+            _HMMetadataVal.version = @"1.0";
+            _HMMetadataVal.lastEntrySecs = 0;
+        }
+    }
+    return _HMMetadataVal;
+}
+
 
 -(NSMutableArray*)HMDataArray {
     
@@ -175,7 +174,6 @@
                                 ascending:YES];
         [rq setEntity:e];
         [rq setSortDescriptors:[NSArray arrayWithObject:sd]];
-        
         //[rq setReturnsObjectsAsFaults:false];
         
         //retrieve the data

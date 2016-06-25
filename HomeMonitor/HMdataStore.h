@@ -10,10 +10,12 @@
 #import <CoreData/CoreData.h>
 #import <MapKit/MapKit.h>
 #import "HMDAta.h"
+#import "HMMetadata.h"
 
 @interface HMdataStore : NSObject <UIAlertViewDelegate>
 
 @property (nonatomic,strong) NSMutableArray* HMDataArray;
+@property (nonatomic,strong) HMMetadata* HMMetadataVal;
 
 
 +(HMdataStore *)defaultStore;

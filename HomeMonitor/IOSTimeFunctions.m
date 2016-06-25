@@ -124,7 +124,7 @@
     [DF setDateFormat:@"yyyy"];
     [DF setTimeZone:TZ];
     NSString* dateStr =[DF stringFromDate:date];
-    return [dateStr integerValue];
+    return [dateStr intValue];
 }
 
 -(int)month:(NSTimeInterval)secs {
@@ -133,7 +133,7 @@
     [DF setDateFormat:@"MM"];
     [DF setTimeZone:TZ];
     NSString* dateStr =[DF stringFromDate:date];
-    return [dateStr integerValue];
+    return [dateStr intValue];
 }
 
 -(NSString*)nowHHmmss {
