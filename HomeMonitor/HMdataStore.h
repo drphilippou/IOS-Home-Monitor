@@ -25,6 +25,7 @@
 
 -(HMData*)createHMData;
 -(HMData*)getHMDataAtSecs1970:(NSTimeInterval)sec;
+-(HMData*)getLatestHMData;
 
 
 

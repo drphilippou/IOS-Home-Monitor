@@ -162,6 +162,38 @@
 }
 
 
+-(HMData*)getLatestHMData {
+    
+    //create the request
+    NSEntityDescription *e = [[model entitiesByName] objectForKey:@"HMData"];
+    NSFetchRequest *rq = [[NSFetchRequest alloc] init];
+    [rq setEntity:e];
+    [rq setFetchLimit:3];
+    [rq setReturnsObjectsAsFaults:false];
+    
+    //grab the data in time order
+    NSSortDescriptor *sd = [NSSortDescriptor
+                            sortDescriptorWithKey:@"secs"
+                            ascending:NO];
+    [rq setSortDescriptors:[NSArray arrayWithObject:sd]];
+    
+    
+    //retrieve the data
+    NSArray* res;
+    res = [context executeFetchRequest:rq error:nil];
+    
+    //stroe the date in the output array
+    if (res.count>0) {
+        HMData* v = [res firstObject];
+        return v;
+    } else {
+        return nil;
+    }
+}
+
+
+
+
 -(NSMutableArray*)HMDataArray {
     
     if (!_HMDataArray) {
