@@ -10,6 +10,7 @@
 #import "IOSTimeFunctions.h"
 #import "HMDownloadManager.h"
 #import "HMdataStore.h"
+#import "LinePlotView.h"
 
 @interface ViewController ()
 {
@@ -32,6 +33,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *zoeRoomHumidityLabel;
 @property (weak, nonatomic) IBOutlet UILabel *keliiRoomHumidityLabel;
 @property (weak, nonatomic) IBOutlet UILabel *dehumdifierEnergyLabel;
+
+@property (strong, nonatomic) LinePlotView* lpv;
 
 
 
@@ -72,6 +75,30 @@
         [DM startDownloadingLatest];
     }
     DM.newDataAvailable = true;
+    
+    //test graph
+    NSArray* d = DB.HMDataArray;
+    NSMutableArray* zoe100 = [[NSMutableArray alloc] init];
+    NSMutableArray* kelii100 = [[NSMutableArray alloc] init];
+    for (unsigned long i = d.count-500 ; i<d.count ; i++) {
+        HMData* de = d[i];
+        NSString* ds = [NSString stringWithFormat:@"%f",de.pvSurplus];
+        [zoe100 addObject:ds];
+        NSString* dsk = [NSString stringWithFormat:@"%d",de.keliiRoomHumidity];
+        [kelii100 addObject:dsk];
+    }
+    //@[@"1",@"2",@"3.0",@"2.5",@"4.0",@"0"]];
+    
+    
+    
+    CGRect r = CGRectMake(10, 100, 350, 50);
+    //LinePlotView* lpv = [[LinePlotView alloc] initWithFrame:r];
+    self.lpv = [[LinePlotView alloc] initWithFrame:r
+                                              Data:zoe100];
+    self.lpv.backgroundColor = [UIColor grayColor];
+    self.lpv.useGrid = false;
+    [self.view addSubview:self.lpv];
+    
 }
 
 
@@ -92,6 +119,16 @@
         self.dehumdifierEnergyLabel.text = [NSString stringWithFormat:@"Dehumidifier Energy:%d wh",d.dehumidEnergy];
         
         DM.newDataAvailable = false;
+        
+//         if (self.lpv.ctx) {
+//            //[self.lpv drawLine];
+//             [self.lpv setNeedsDisplay];
+//        }
+//       
+        
+        
+        
+        
     }
 }
 

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		DA3D29321D1DF13A00F4FF9A /* HMMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = DA3D29311D1DF13A00F4FF9A /* HMMetadata.m */; };
+		DA5FE61D1D2CAE5400148E4F /* LinePlotView.m in Sources */ = {isa = PBXBuildFile; fileRef = DA5FE61C1D2CAE5400148E4F /* LinePlotView.m */; };
 		DA74B92A1D1A48F0009D6F15 /* HMDownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = DA74B9291D1A48F0009D6F15 /* HMDownloadManager.m */; };
 		DA74B9351D1B0253009D6F15 /* HMData+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = DA74B9321D1B0253009D6F15 /* HMData+CoreDataProperties.m */; };
 		DA74B9361D1B0253009D6F15 /* HMData.m in Sources */ = {isa = PBXBuildFile; fileRef = DA74B9341D1B0253009D6F15 /* HMData.m */; };
@@ -36,6 +37,8 @@
 /* Begin PBXFileReference section */
 		DA3D29301D1DF13A00F4FF9A /* HMMetadata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HMMetadata.h; sourceTree = "<group>"; };
 		DA3D29311D1DF13A00F4FF9A /* HMMetadata.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HMMetadata.m; sourceTree = "<group>"; };
+		DA5FE61B1D2CAE5400148E4F /* LinePlotView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LinePlotView.h; path = ../LinePlotView.h; sourceTree = "<group>"; };
+		DA5FE61C1D2CAE5400148E4F /* LinePlotView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LinePlotView.m; path = ../LinePlotView.m; sourceTree = "<group>"; };
 		DA74B9281D1A48F0009D6F15 /* HMDownloadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HMDownloadManager.h; path = ../HMDownloadManager.h; sourceTree = "<group>"; };
 		DA74B9291D1A48F0009D6F15 /* HMDownloadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HMDownloadManager.m; path = ../HMDownloadManager.m; sourceTree = "<group>"; };
 		DA74B9311D1B0253009D6F15 /* HMData+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "HMData+CoreDataProperties.h"; sourceTree = "<group>"; };
@@ -101,6 +104,8 @@
 		DAF5C29B1D0789EE00DF2F7E /* HomeMonitor */ = {
 			isa = PBXGroup;
 			children = (
+				DA5FE61B1D2CAE5400148E4F /* LinePlotView.h */,
+				DA5FE61C1D2CAE5400148E4F /* LinePlotView.m */,
 				DAF5C30D1D1675E000DF2F7E /* IOSTimeFunctions.h */,
 				DAF5C30E1D1675E000DF2F7E /* IOSTimeFunctions.m */,
 				DAF5C2A01D0789EE00DF2F7E /* AppDelegate.h */,
@@ -257,6 +262,7 @@
 				DAF5C2A51D0789EE00DF2F7E /* HomeMonitor.xcdatamodeld in Sources */,
 				DAF5C2A21D0789EE00DF2F7E /* AppDelegate.m in Sources */,
 				DA74B9361D1B0253009D6F15 /* HMData.m in Sources */,
+				DA5FE61D1D2CAE5400148E4F /* LinePlotView.m in Sources */,
 				DAF5C2A81D0789EE00DF2F7E /* ViewController.m in Sources */,
 				DAF5C29F1D0789EE00DF2F7E /* main.m in Sources */,
 				DA74B92A1D1A48F0009D6F15 /* HMDownloadManager.m in Sources */,

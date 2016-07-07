@@ -206,7 +206,7 @@
                                 ascending:YES];
         [rq setEntity:e];
         [rq setSortDescriptors:[NSArray arrayWithObject:sd]];
-        //[rq setReturnsObjectsAsFaults:false];
+
         
         //retrieve the data
         NSArray* res;
