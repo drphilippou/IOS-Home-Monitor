@@ -57,11 +57,9 @@
 
     TF = [[IOSTimeFunctions alloc] init];
     DM = [[HMDownloadManager alloc] init];
-    DB = [[HMdataStore alloc] init];
+    DB = [HMdataStore defaultStore];
     checkForUpdatesTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(checkForUpdates) userInfo:nil repeats:YES];
     
-    
-    //test
     
     //do we need to load any File History?
     NSTimeInterval now = [TF currentTimeSec];
@@ -77,29 +75,34 @@
     DM.newDataAvailable = true;
     
     //test graph
+    //DB.HMDataArray = nil;
     NSArray* d = DB.HMDataArray;
-    NSMutableArray* zoe100 = [[NSMutableArray alloc] init];
-    NSMutableArray* kelii100 = [[NSMutableArray alloc] init];
-    for (unsigned long i = d.count-500 ; i<d.count ; i++) {
+    NSMutableArray* x100 = [[NSMutableArray alloc] init];
+    NSMutableArray* y100 = [[NSMutableArray alloc] init];
+    for (unsigned long i = d.count-100 ; i<d.count ; i++) {
         HMData* de = d[i];
-        NSString* ds = [NSString stringWithFormat:@"%f",de.pvSurplus];
-        [zoe100 addObject:ds];
-        NSString* dsk = [NSString stringWithFormat:@"%d",de.keliiRoomHumidity];
-        [kelii100 addObject:dsk];
+        NSString* ds = [NSString stringWithFormat:@"%d",de.currPVPower];
+        [y100 addObject:ds];
+        NSString* dsk = [NSString stringWithFormat:@"%lf",de.secs];
+        [x100 addObject:dsk];
     }
-    //@[@"1",@"2",@"3.0",@"2.5",@"4.0",@"0"]];
     
     
-    
-    CGRect r = CGRectMake(10, 100, 350, 50);
+    CGRect r = CGRectMake(10, 500, 350, 150);
     //LinePlotView* lpv = [[LinePlotView alloc] initWithFrame:r];
     self.lpv = [[LinePlotView alloc] initWithFrame:r
-                                              Data:zoe100];
+                                              Data:y100];
+    self.lpv.xVals = x100;
+    //self.lpv.yMax = 8000;
+    //self.lpv.yMin = 0;
+    //self.lpv.customYLimits = true;
     self.lpv.backgroundColor = [UIColor grayColor];
     self.lpv.useGrid = false;
     [self.view addSubview:self.lpv];
     
 }
+
+
 
 
 -(void)checkForUpdates {
@@ -120,21 +123,38 @@
         
         DM.newDataAvailable = false;
         
-//         if (self.lpv.ctx) {
-//            //[self.lpv drawLine];
-//             [self.lpv setNeedsDisplay];
-//        }
-//       
+        //test getting data
+        NSTimeInterval s = d.secs;
         
+        //see if I can update the graph
+
+        //test graph
+        NSLog(@"updating graph");
+
+        //[self.lpv setYMaxValue:8000];
+        //[self.lpv setYMinValue:0];
+        //self.lpv.gridYIncrement = 1000;
         
+        //test extracting the data
+        //NSArray* yv = [DB getFieldAsString:@"currPVPower" sinceSec:s-86400];
+        NSArray* yv = [DB getFieldAsString:@"pvSurplus" sinceSec:s-3*86400];
+        //NSArray* yv = [DB getFieldAsString:@"ZoeRoomHumidity" sinceSec:s-86400];
+        //NSArray* yv = [DB getFieldAsString:@"homePower" sinceSec:s-86400];
+        NSArray* xv = [DB getFieldAsString:@"secs" sinceSec:s-3*86400]; //date
+        //NSArray* tt = [DB getFieldAsString:@"date" sinceSec:s-86400]; //string
         
+        self.lpv.xVals = xv;
+        self.lpv.yVals = yv;
+        [self.lpv setNeedsDisplay];
         
+
     }
 }
 
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
+    DB.HMDataArray = nil;
     // Dispose of any resources that can be recreated.
 }
 
