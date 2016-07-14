@@ -22,7 +22,6 @@
     }
     return _yVals;
 }
-
 -(NSArray*)y2Vals {
     if (!_y2Vals) {
         _y2Vals = [[NSArray alloc] init];
@@ -38,6 +37,36 @@
 -(void)setYMaxValue:(double)y {
     _yMax = y;
     self.customYMaxLimits = true;
+}
+
+
+-(int)xpt:(float) px {
+    int w = self.frame.size.width;
+    float offset = 0.0;
+    
+    //reduce the width
+    w -= self.leftSideMargin;
+    w -= self.rightSideMargin;
+    
+    //shift the origin
+    offset += self.leftSideMargin;
+    
+    return ((px * w) + offset);
+}
+
+
+-(int)ypt:(float) py {
+    int h = self.frame.size.height;
+    float offset = 0.0;
+    
+    //reduce the width
+    h -= self.topMargin;
+    h -= self.bottomMargin;
+    
+    //shift the origin
+    offset += self.topMargin;
+    
+    return ((py * h) + offset);
 }
 
 
@@ -62,12 +91,12 @@
         return;
     }
     
-    
+    //draw axis
     CGContextSetStrokeColorWithColor(context, [[UIColor blackColor] CGColor]);
     CGContextSetLineWidth(context, 2.0);
-    CGContextMoveToPoint(context, 1.0, 0.0);
-    CGContextAddLineToPoint(context, 1.0, h-1);
-    CGContextAddLineToPoint(context, w, h-1);
+    CGContextMoveToPoint(context,   [self xpt:0]-1,[self ypt:0]);
+    CGContextAddLineToPoint(context,[self xpt:0]-1,[self ypt:1]-1);
+    CGContextAddLineToPoint(context,[self xpt:1]-1,[self ypt:1]-1);
     CGContextDrawPath(context, kCGPathStroke);
     
     
@@ -82,9 +111,9 @@
     CGContextRef context = UIGraphicsGetCurrentContext();
     
     //get the bounds
-    CGRect f = self.frame;
-    float w = f.size.width;
-    float h = f.size.height;
+    //CGRect f = self.frame;
+    //float w = f.size.width;
+    //float h = f.size.height;
     
     double rangex = _xMax - _xMin;
     double rangey = _yMax - _yMin;
@@ -101,8 +130,8 @@
     double px = (vx - _xMin)/rangex;
     double py = 1.0 - (vy - _yMin)/rangey;
     
-    double x = px*w;
-    double y = py*h;
+    double x = [self xpt:px];
+    double y = [self ypt:py];
     CGContextMoveToPoint(context, x,y);
     for (unsigned long i= 1 ; i<yv.count ; i++) {
         vsx = xv[i];
@@ -113,8 +142,8 @@
         px = (vx - _xMin)/rangex;
         py = 1.0 - (vy - _yMin)/rangey;
         
-        x = px*w;
-        y = py*h;
+        x = [self xpt:px];
+        y = [self ypt:py];
         CGContextAddLineToPoint(context, x, y);
     }
     CGContextDrawPath(context, kCGPathStroke);
@@ -124,29 +153,34 @@
     CGContextRef context = UIGraphicsGetCurrentContext();
     
     //get the bounds
-    CGRect f = self.frame;
-    float w = f.size.width;
-    float h = f.size.height;
+    //CGRect f = self.frame;
+    //float w = f.size.width;
+    //float h = f.size.height;
     unsigned long n = yv.count;
     double rangey = _yMax - _yMin;
     
     //set the starting point
-    double dx = w/(1.0*(n-1));
-    double x = 0;
+    //double dx = w/(1.0*(n-1));
+    double pdx = 1.0/(1.0*(n-1));
     double v = [[yv firstObject] doubleValue];
-    double p = 1.0 - (v - _yMin)/rangey;
-    int y = p * h;
+    
+    double px = 0;
+    double py = 1.0 - (v - _yMin)/rangey;
+
+    int x = [self xpt:px]; //0;
+    int y = [self ypt:py]; //p * h;
     CGContextSetStrokeColorWithColor(context, [color CGColor]);
     CGContextSetLineWidth(context, 1.0);
     CGContextMoveToPoint(context, x, y);
 
     for (int i=1 ; i< yv.count ; i++) {
         NSString* vs = yv[i];
-        x += dx;
+        px += pdx;
+        x  = [self xpt:px];
         if ([vs isKindOfClass:[NSString class]]) {
             v = [vs doubleValue];
-            p = 1.0 - (v - _yMin)/rangey;
-            y = p * h;
+            py = 1.0 - (v - _yMin)/rangey;
+            y = [self ypt:py]; //p * h;
             CGContextAddLineToPoint(context, x, y);
             
         }
@@ -243,9 +277,9 @@
     CGContextRef context = UIGraphicsGetCurrentContext();
     
     //get the bounds
-    CGRect f = self.frame;
-    float w = f.size.width;
-    float h = f.size.height;
+//    CGRect f = self.frame;
+    //float w = f.size.width;
+    //float h = f.size.height;
     
     if (self.gridYIncrement != 0) {
         CGContextSetStrokeColorWithColor(context, [[UIColor blackColor] CGColor]);
@@ -253,44 +287,19 @@
         CGContextSetLineDash(context, 0.0, dash, 2);
         CGContextSetLineWidth(context, 0.5);
         
-        
-        //double rangex = _xMax - _xMin;
         double rangey = _yMax - _yMin;
         
         for (double v=0 ; v<self.yMax;  v += self.gridYIncrement) {
             double p = 1.0 - (v - _yMin)/rangey;
-            double y = p * h;
-            CGContextMoveToPoint(context, 0, y);
-            CGContextAddLineToPoint(context, w, y);
+            double y = [self ypt:p];
+            double xmin = [self xpt:0];
+            double xmax = [self xpt:1];
+            CGContextMoveToPoint(context, xmin, y);
+            CGContextAddLineToPoint(context, xmax, y);
             CGContextDrawPath(context, kCGPathStroke);
             
         }
     }
-    
-    
-    //        double p = 1.0 - (v - _yMin)/rangey;
-    //    int y = p * h;
-//    
-//    CGContextSetStrokeColorWithColor(context, [[UIColor redColor] CGColor]);
-//    CGContextSetLineWidth(context, 1.0);
-//    
-//    if (self.xVals.count < self.yVals.count) {
-//        //line plot
-//        CGContextMoveToPoint(context, x, y);
-//        for (int i=1 ; i< _yVals.count ; i++) {
-//            NSString* vs = _yVals[i];
-//            x += dx;
-//            if ([vs isKindOfClass:[NSString class]]) {
-//                v = [vs doubleValue];
-//                CGContextAddLineToPoint(context, x, y);
-//                
-//            }
-//        }
-//        
-//    
-//    for (float hh = 0 ; hh< h ; hh+= h/3.0) {
-//    }
-//    }
 }
 
 

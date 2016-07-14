@@ -24,6 +24,13 @@
 @property (nonatomic)double yMin;
 @property (nonatomic)double yMax;
 
+//add margins for labels and titles
+@property (nonatomic)int leftSideMargin;
+@property (nonatomic)int rightSideMargin;
+@property (nonatomic)int topMargin;
+@property (nonatomic)int bottomMargin;
+
+
 -(id)initWithFrame:(CGRect)f Data:(NSArray*)data;
 -(void)setYMinValue:(double)yMin;
 -(void)setYMaxValue:(double)yMax;

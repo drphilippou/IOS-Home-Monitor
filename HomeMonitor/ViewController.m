@@ -111,8 +111,12 @@
 
 
         //NSArray* yv = [DB getFieldAsString:@"pvSurplus" sinceSec:s-86400];
-        [self plotHomeEnergyVsPVPower:86400];
-        //[self plotZoeVsKeliiHumidity:86400];
+        //[self plotHomeEnergyVsPVPower:86400];
+        self.lpv.topMargin = 40;
+        self.lpv.bottomMargin = 10;
+        self.lpv.leftSideMargin = 40;
+        self.lpv.rightSideMargin = 10;
+        [self plotZoeVsKeliiHumidity:86400];
 
     }
 }
