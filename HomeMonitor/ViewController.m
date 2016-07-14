@@ -35,6 +35,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *dehumdifierEnergyLabel;
 
 @property (strong, nonatomic) LinePlotView* lpv;
+- (IBAction)reloadHistoryPressed:(id)sender;
 
 
 
@@ -64,7 +65,7 @@
     //do we need to load any File History?
     NSTimeInterval now = [TF currentTimeSec];
     NSTimeInterval lastRxSecs = DB.HMMetadataVal.lastEntrySecs;
-    NSLog(@"last RX SECs= %f",lastRxSecs);
+    NSLog(@"last RX time= %@",[TF localTimehhmmssa:lastRxSecs]);
     if ((now - lastRxSecs)>3000) {
         //start downloading history
         [DM startDownloadingHistory];
@@ -75,29 +76,8 @@
     DM.newDataAvailable = true;
     
     //test graph
-    //DB.HMDataArray = nil;
-    NSArray* d = DB.HMDataArray;
-    NSMutableArray* x100 = [[NSMutableArray alloc] init];
-    NSMutableArray* y100 = [[NSMutableArray alloc] init];
-    for (unsigned long i = d.count-100 ; i<d.count ; i++) {
-        HMData* de = d[i];
-        NSString* ds = [NSString stringWithFormat:@"%d",de.currPVPower];
-        [y100 addObject:ds];
-        NSString* dsk = [NSString stringWithFormat:@"%lf",de.secs];
-        [x100 addObject:dsk];
-    }
-    
-    
     CGRect r = CGRectMake(10, 500, 350, 150);
-    //LinePlotView* lpv = [[LinePlotView alloc] initWithFrame:r];
-    self.lpv = [[LinePlotView alloc] initWithFrame:r
-                                              Data:y100];
-    self.lpv.xVals = x100;
-    //self.lpv.yMax = 8000;
-    //self.lpv.yMin = 0;
-    //self.lpv.customYLimits = true;
-    self.lpv.backgroundColor = [UIColor grayColor];
-    self.lpv.useGrid = false;
+    self.lpv = [[LinePlotView alloc] initWithFrame:r ];
     [self.view addSubview:self.lpv];
     
 }
@@ -124,33 +104,56 @@
         DM.newDataAvailable = false;
         
         //test getting data
-        NSTimeInterval s = d.secs;
+        //NSTimeInterval s = d.secs;
         
-        //see if I can update the graph
-
-        //test graph
+        //update the graph
         NSLog(@"updating graph");
 
-        //[self.lpv setYMaxValue:8000];
-        //[self.lpv setYMinValue:0];
-        //self.lpv.gridYIncrement = 1000;
-        
-        //test extracting the data
-        //NSArray* yv = [DB getFieldAsString:@"currPVPower" sinceSec:s-86400];
-        NSArray* yv = [DB getFieldAsString:@"pvSurplus" sinceSec:s-3*86400];
-        //NSArray* yv = [DB getFieldAsString:@"ZoeRoomHumidity" sinceSec:s-86400];
-        //NSArray* yv = [DB getFieldAsString:@"homePower" sinceSec:s-86400];
-        NSArray* xv = [DB getFieldAsString:@"secs" sinceSec:s-3*86400]; //date
-        //NSArray* tt = [DB getFieldAsString:@"date" sinceSec:s-86400]; //string
-        
-        self.lpv.xVals = xv;
-        self.lpv.yVals = yv;
-        [self.lpv setNeedsDisplay];
-        
+
+        //NSArray* yv = [DB getFieldAsString:@"pvSurplus" sinceSec:s-86400];
+        [self plotHomeEnergyVsPVPower:86400];
+        //[self plotZoeVsKeliiHumidity:86400];
 
     }
 }
 
+-(void)plotZoeVsKeliiHumidity:(int) secs {
+    HMData* d = [DB getLatestHMData];
+    NSTimeInterval ls = d.secs;
+    
+    self.lpv.gridYIncrement = 1;
+    
+    //extract the data
+    NSArray* yv = [DB getFieldAsString:@"ZoeRoomHumidity" sinceSec:ls-secs];
+    NSArray* y2v = [DB getFieldAsString:@"KeliiRoomHumidity" sinceSec:ls-secs];
+    NSArray* xv = [DB getFieldAsString:@"secs" sinceSec:ls-secs];
+    
+    self.lpv.xVals = xv;
+    self.lpv.yVals = yv;
+    self.lpv.y2Vals = y2v;
+    self.lpv.backgroundColor = [UIColor lightGrayColor];
+    [self.lpv setNeedsDisplay];
+}
+
+-(void)plotHomeEnergyVsPVPower:(int)secs {
+    HMData* d = [DB getLatestHMData];
+    NSTimeInterval ls = d.secs;
+    
+    [self.lpv setYMaxValue:8000];
+    [self.lpv setYMinValue:0];
+    self.lpv.gridYIncrement = 1000;
+    
+    //extract the data
+    NSArray* yv = [DB getFieldAsString:@"homePower" sinceSec:ls-secs];
+    NSArray* xv = [DB getFieldAsString:@"secs" sinceSec:ls-secs];
+    NSArray* y2v = [DB getFieldAsString:@"currPVPower" sinceSec:ls-secs];
+    
+    self.lpv.xVals = xv;
+    self.lpv.yVals = yv;
+    self.lpv.y2Vals = y2v;
+    self.lpv.backgroundColor = [UIColor lightGrayColor];
+    [self.lpv setNeedsDisplay];
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -161,4 +164,7 @@
 
 
 
+- (IBAction)reloadHistoryPressed:(id)sender {
+    [DM startDownloadingHistory];
+}
 @end

@@ -78,75 +78,114 @@
 }
 
 
--(void)drawLines {
+-(void)scatterPlotXV:(NSArray*)xv YV:(NSArray*) yv Color:(UIColor*)color {
     CGContextRef context = UIGraphicsGetCurrentContext();
     
     //get the bounds
     CGRect f = self.frame;
     float w = f.size.width;
     float h = f.size.height;
-    unsigned long n = _yVals.count;
     
     double rangex = _xMax - _xMin;
     double rangey = _yMax - _yMin;
     
-    double dx = w/(1.0*(n-1));
-    double x = 0;
-    double v = [[_yVals firstObject] doubleValue];
-    double p = 1.0 - (v - _yMin)/rangey;
-    int y = p * h;
-    
-    CGContextSetStrokeColorWithColor(context, [[UIColor redColor] CGColor]);
+    CGContextSetStrokeColorWithColor(context, [color CGColor]);
     CGContextSetLineWidth(context, 1.0);
     
-    if (self.xVals.count < self.yVals.count) {
-        //line plot
-        CGContextMoveToPoint(context, x, y);
-        for (int i=1 ; i< _yVals.count ; i++) {
-            NSString* vs = _yVals[i];
-            x += dx;
-            if ([vs isKindOfClass:[NSString class]]) {
-                v = [vs doubleValue];
-                p = 1.0 - (v - _yMin)/rangey;
-                y = p * h;
-                CGContextAddLineToPoint(context, x, y);
-                
-            }
-        }
+    //scatter plot
+    NSString* vsx = [xv firstObject];
+    NSString* vsy = [yv firstObject];
+    double vx = [vsx doubleValue];
+    double vy = [vsy doubleValue];
+    
+    double px = (vx - _xMin)/rangex;
+    double py = 1.0 - (vy - _yMin)/rangey;
+    
+    double x = px*w;
+    double y = py*h;
+    CGContextMoveToPoint(context, x,y);
+    for (unsigned long i= 1 ; i<yv.count ; i++) {
+        vsx = xv[i];
+        vsy = yv[i];
+        vx = [vsx doubleValue];
+        vy = [vsy doubleValue];
+        
+        px = (vx - _xMin)/rangex;
+        py = 1.0 - (vy - _yMin)/rangey;
+        
+        x = px*w;
+        y = py*h;
+        CGContextAddLineToPoint(context, x, y);
+    }
+    CGContextDrawPath(context, kCGPathStroke);
+}
 
-    } else {
-        //scatter plot
-        NSString* vsx = [_xVals firstObject];
-        NSString* vsy = [_yVals firstObject];
-        double vx = [vsx doubleValue];
-        double vy = [vsy doubleValue];
-        
-        double px = (vx - _xMin)/rangex;
-        double py = 1.0 - (vy - _yMin)/rangey;
-        
-        double x = px*w;
-        double y = py*h;
-        CGContextMoveToPoint(context, x,y);
-        for (unsigned long i= 1 ; i<self.yVals.count ; i++) {
-            vsx = _xVals[i];
-            vsy = _yVals[i];
-            vx = [vsx doubleValue];
-            vy = [vsy doubleValue];
-            
-            px = (vx - _xMin)/rangex;
-            py = 1.0 - (vy - _yMin)/rangey;
-            
-            x = px*w;
-            y = py*h;
+-(void)linePlot:(NSArray*)yv Color:(UIColor*)color {
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    
+    //get the bounds
+    CGRect f = self.frame;
+    float w = f.size.width;
+    float h = f.size.height;
+    unsigned long n = yv.count;
+    double rangey = _yMax - _yMin;
+    
+    //set the starting point
+    double dx = w/(1.0*(n-1));
+    double x = 0;
+    double v = [[yv firstObject] doubleValue];
+    double p = 1.0 - (v - _yMin)/rangey;
+    int y = p * h;
+    CGContextSetStrokeColorWithColor(context, [color CGColor]);
+    CGContextSetLineWidth(context, 1.0);
+    CGContextMoveToPoint(context, x, y);
+
+    for (int i=1 ; i< yv.count ; i++) {
+        NSString* vs = yv[i];
+        x += dx;
+        if ([vs isKindOfClass:[NSString class]]) {
+            v = [vs doubleValue];
+            p = 1.0 - (v - _yMin)/rangey;
+            y = p * h;
             CGContextAddLineToPoint(context, x, y);
+            
         }
     }
     CGContextDrawPath(context, kCGPathStroke);
     
-    
-
-    
 }
+
+
+-(void)drawLines {
+    
+    if (self.xVals.count < self.yVals.count) {
+        //line plot
+        if (self.y2Vals.count==0) {
+            [self linePlot:self.yVals Color:[UIColor redColor]];
+        } else {
+            [self linePlot:self.yVals Color:[UIColor redColor]];
+            [self linePlot:self.y2Vals Color:[UIColor blueColor]];
+        }
+
+    } else {
+        //scatter plot
+        if (self.y2Vals.count == 0) {
+            [self scatterPlotXV:self.xVals
+                             YV:self.y2Vals
+                          Color:[UIColor redColor]];
+        } else {
+            [self scatterPlotXV:self.xVals
+                             YV:self.yVals
+                          Color:[UIColor redColor]];
+            [self scatterPlotXV:self.xVals
+                             YV:self.y2Vals
+                          Color:[UIColor blueColor]];
+            
+        }
+    }
+}
+
+
 
 -(void)setXMaxAndXMin {
     if (!self.customXLimits) {

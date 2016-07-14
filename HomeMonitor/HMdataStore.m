@@ -207,7 +207,7 @@
     //grab the data in time order
     NSSortDescriptor *sd = [NSSortDescriptor
                             sortDescriptorWithKey:@"secs"
-                            ascending:NO];
+                            ascending:YES];
     [rq setSortDescriptors:[NSArray arrayWithObject:sd]];
     
     //set the predicate

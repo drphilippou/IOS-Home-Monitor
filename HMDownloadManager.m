@@ -88,7 +88,8 @@
             [self startDownloadingLatest];
         } else {
             
-            if ([requestedFilename isEqualToString:@""]) {
+            if ([requestedFilename isEqualToString:@""] ||
+                [requestedFilename isEqualToString:@"CurrentHour.json"]) {
                 int year = 2016;
                 int month = 4;
                 if ([DB HMMetadataVal].lastEntrySecs >0) {
