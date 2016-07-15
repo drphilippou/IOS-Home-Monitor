@@ -34,7 +34,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *keliiRoomHumidityLabel;
 @property (weak, nonatomic) IBOutlet UILabel *dehumdifierEnergyLabel;
 
-@property (strong, nonatomic) LinePlotView* lpv;
+//@property (strong, nonatomic) LinePlotView* lpv;
+@property (weak, nonatomic) IBOutlet LinePlotView *lpv;
 - (IBAction)reloadHistoryPressed:(id)sender;
 
 
@@ -76,9 +77,9 @@
     DM.newDataAvailable = true;
     
     //test graph
-    CGRect r = CGRectMake(10, 500, 350, 150);
-    self.lpv = [[LinePlotView alloc] initWithFrame:r ];
-    [self.view addSubview:self.lpv];
+    //CGRect r = CGRectMake(10, 500, 350, 150);
+    //self.lpv = [[LinePlotView alloc] initWithFrame:r ];
+    //[self.view addSubview:self.lpv];
     
 }
 
