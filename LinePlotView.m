@@ -8,7 +8,21 @@
 
 #import "LinePlotView.h"
 
+@interface LinePlotView() 
+
+@property (nonatomic,strong) NSMutableDictionary* yLabels;
+
+@end
+
+
 @implementation LinePlotView
+
+-(NSMutableDictionary*) yLabels {
+    if (!_yLabels) {
+        _yLabels = [[NSMutableDictionary alloc] init];
+    }
+    return _yLabels;
+}
 
 -(NSArray*)xVals {
     if (!_xVals) {
@@ -74,6 +88,15 @@
     self = [super initWithFrame:f];
     _yVals = [[NSArray alloc] initWithArray:data copyItems:true];
     return self;
+}
+
+-(void)reset {
+    self.customXLimits = false;
+    self.customYMaxLimits = false;
+    self.customYMinLimits = false;
+    self.xVals = nil;
+    self.yVals = nil;
+    self.y2Vals = nil;
 }
 
 
@@ -205,7 +228,7 @@
         //scatter plot
         if (self.y2Vals.count == 0) {
             [self scatterPlotXV:self.xVals
-                             YV:self.y2Vals
+                             YV:self.yVals
                           Color:[UIColor redColor]];
         } else {
             [self scatterPlotXV:self.xVals
@@ -276,11 +299,6 @@
 -(void)drawGrid {
     CGContextRef context = UIGraphicsGetCurrentContext();
     
-    //get the bounds
-//    CGRect f = self.frame;
-    //float w = f.size.width;
-    //float h = f.size.height;
-    
     if (self.gridYIncrement != 0) {
         CGContextSetStrokeColorWithColor(context, [[UIColor blackColor] CGColor]);
         CGFloat dash[] = {0.0, 2.0};
@@ -290,14 +308,20 @@
         double rangey = _yMax - _yMin;
         
         for (double v=0 ; v<self.yMax;  v += self.gridYIncrement) {
-            double p = 1.0 - (v - _yMin)/rangey;
-            double y = [self ypt:p];
-            double xmin = [self xpt:0];
-            double xmax = [self xpt:1];
-            CGContextMoveToPoint(context, xmin, y);
-            CGContextAddLineToPoint(context, xmax, y);
-            CGContextDrawPath(context, kCGPathStroke);
-            
+            if (v>self.yMin) {
+                double p = 1.0 - (v - _yMin)/rangey;
+                double y = [self ypt:p];
+                double xmin = [self xpt:0];
+                double xmax = [self xpt:1];
+                CGContextMoveToPoint(context, xmin, y);
+                CGContextAddLineToPoint(context, xmax, y);
+                CGContextDrawPath(context, kCGPathStroke);
+                
+                //reord the values for labels
+                NSString* vStr =[NSString stringWithFormat:@"%f",v];
+                NSString* yStr =[NSString stringWithFormat:@"%f",y];
+                [self.yLabels setObject:vStr forKey:yStr];
+            }
         }
     }
 }

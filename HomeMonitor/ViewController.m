@@ -37,6 +37,12 @@
 //@property (strong, nonatomic) LinePlotView* lpv;
 @property (weak, nonatomic) IBOutlet LinePlotView *lpv;
 - (IBAction)reloadHistoryPressed:(id)sender;
+@property (weak, nonatomic) IBOutlet UIButton *reloadHistoryButton;
+- (IBAction)timeSliderChanged:(id)sender;
+@property (weak, nonatomic) IBOutlet UISlider *TimeSlider;
+- (IBAction)timeSliderEditDone:(id)sender;
+- (IBAction)GraphTypeChanged:(id)sender;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *GraphType;
 
 
 
@@ -67,14 +73,19 @@
     NSTimeInterval now = [TF currentTimeSec];
     NSTimeInterval lastRxSecs = DB.HMMetadataVal.lastEntrySecs;
     NSLog(@"last RX time= %@",[TF localTimehhmmssa:lastRxSecs]);
-    if ((now - lastRxSecs)>3000) {
+    //if ((now - lastRxSecs)>3000) {
         //start downloading history
-        [DM startDownloadingHistory];
-    } else {
-        //start the incremental download
         [DM startDownloadingLatest];
-    }
+        [DM startDownloadingHistory];
+    //} else {
+        //start the incremental download
+      //  [DM startDownloadingLatest];
+        //[DM startDownloadingHistory];
+    //}
     DM.newDataAvailable = true;
+    
+    //set the graphics
+    //self.reloadHistoryButton.backgroundColor = [UIColor lightGrayColor];
     
     //test graph
     //CGRect r = CGRectMake(10, 500, 350, 150);
@@ -87,6 +98,12 @@
 
 
 -(void)checkForUpdates {
+    if (DM.downloading) {
+        [self.reloadHistoryButton setTitle:DM.activityStr forState:UIControlStateNormal];
+    } else {
+        [self.reloadHistoryButton setTitle:@"Reload History" forState:UIControlStateNormal];
+    }
+    
     if (DM.newDataAvailable) {
         
         //grab the latest data
@@ -112,14 +129,35 @@
 
 
         //NSArray* yv = [DB getFieldAsString:@"pvSurplus" sinceSec:s-86400];
-        //[self plotHomeEnergyVsPVPower:86400];
         self.lpv.topMargin = 40;
         self.lpv.bottomMargin = 10;
         self.lpv.leftSideMargin = 40;
         self.lpv.rightSideMargin = 10;
-        [self plotZoeVsKeliiHumidity:86400];
+        if (self.GraphType.selectedSegmentIndex ==0) {
+            [self plotZoeVsKeliiHumidity:self.TimeSlider.value];
+        } else if (self.GraphType.selectedSegmentIndex ==1) {
+            [self plotHomeEnergyVsPVPower:self.TimeSlider.value];
+        } else {
+            [self plotSurplus:self.TimeSlider.value];
+        }
 
     }
+}
+
+-(void)plotSurplus:(int)secs {
+    HMData* d = [DB getLatestHMData];
+    NSTimeInterval ls = d.secs;
+    
+    self.lpv.gridYIncrement = 10;
+    
+    //extract the data
+    NSArray* yv = [DB getFieldAsString:@"pvSurplus" sinceSec:ls-secs];
+    NSArray* xv = [DB getFieldAsString:@"secs" sinceSec:ls-secs];
+    
+    self.lpv.xVals = xv;
+    self.lpv.yVals = yv;
+    self.lpv.backgroundColor = [UIColor lightGrayColor];
+    [self.lpv setNeedsDisplay];
 }
 
 -(void)plotZoeVsKeliiHumidity:(int) secs {
@@ -171,5 +209,16 @@
 
 - (IBAction)reloadHistoryPressed:(id)sender {
     [DM startDownloadingHistory];
+}
+- (IBAction)timeSliderChanged:(id)sender {
+    DM.newDataAvailable = true;
+}
+- (IBAction)timeSliderEditDone:(id)sender {
+    //DM.newDataAvailable = true;
+}
+
+- (IBAction)GraphTypeChanged:(id)sender {
+    [self.lpv reset];
+    DM.newDataAvailable = true;
 }
 @end

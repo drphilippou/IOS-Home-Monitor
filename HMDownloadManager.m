@@ -155,6 +155,10 @@
     //set the start time
     //updateWebTime = [self currentTimeSec];
     
+    //report that we are downloading
+    self.downloading = TRUE;
+    self.activityStr = [NSString stringWithFormat:@"Downloading %@",requestedFilename];
+    
     //start the asynchronous transfer
     webData = [[NSMutableData alloc] init];
     NSURLRequest *req = [NSURLRequest requestWithURL:url
@@ -207,6 +211,7 @@
     NSLog(@"failed with error");
     webConnection = nil;
     webData = nil;
+    self.downloading = false;
 }
 
 
@@ -218,10 +223,12 @@
     
     //shut down the web connection
     webConnection = nil;
+    self.downloading = false;
     
     
     //parse
     NSLog(@"Parsing the rx %lu entries",(unsigned long)rxJSON.count);
+    
     int numAdded = 0;
     for (NSString* k in rxJSON) {
         

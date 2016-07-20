@@ -31,9 +31,12 @@
 @property (nonatomic)int bottomMargin;
 
 
+
+
 -(id)initWithFrame:(CGRect)f Data:(NSArray*)data;
 -(void)setYMinValue:(double)yMin;
 -(void)setYMaxValue:(double)yMax;
+-(void)reset;
 
 //-(void)drawLine;
 

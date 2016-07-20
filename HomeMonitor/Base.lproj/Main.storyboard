@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14F1509" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
@@ -18,67 +19,67 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="time" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IE5-HI-MXJ">
-                                <rect key="frame" x="88" y="161" width="126" height="31"/>
+                                <rect key="frame" x="16" y="185" width="126" height="31"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Current PV Power:0.0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VvF-YF-3ht">
-                                <rect key="frame" x="88" y="241" width="287" height="21"/>
+                                <rect key="frame" x="16" y="251" width="287" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="PV Daily Total: 0.0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="igp-OZ-UYE">
-                                <rect key="frame" x="88" y="270" width="287" height="21"/>
+                                <rect key="frame" x="16" y="280" width="287" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="PV Pred :0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oIw-GL-gfa">
-                                <rect key="frame" x="88" y="299" width="287" height="21"/>
+                                <rect key="frame" x="19" y="309" width="287" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="PV Surplus: 0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LNI-0b-xRR">
-                                <rect key="frame" x="88" y="328" width="287" height="21"/>
+                                <rect key="frame" x="19" y="338" width="287" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Home Power Use:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RuS-m4-rWf">
-                                <rect key="frame" x="88" y="357" width="287" height="21"/>
+                                <rect key="frame" x="19" y="367" width="287" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Zoe Room Humidity: 0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2A2-xQ-jOy">
-                                <rect key="frame" x="88" y="402" width="287" height="21"/>
+                                <rect key="frame" x="19" y="396" width="287" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Kelii Room Humidity:0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nZH-TQ-99C">
-                                <rect key="frame" x="88" y="431" width="287" height="21"/>
+                                <rect key="frame" x="19" y="425" width="287" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Dehumidifer Energy:0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RHJ-It-OrC">
-                                <rect key="frame" x="88" y="460" width="287" height="21"/>
+                                <rect key="frame" x="19" y="454" width="287" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="date" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="S5n-Kr-lnA">
-                                <rect key="frame" x="247" y="161" width="151" height="31"/>
+                                <rect key="frame" x="16" y="212" width="151" height="31"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zY0-rw-rOu">
-                                <rect key="frame" x="88" y="123" width="186" height="30"/>
+                                <rect key="frame" x="16" y="58" width="261" height="30"/>
                                 <state key="normal" title="Reload History">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -90,16 +91,42 @@
                                 <rect key="frame" x="41" y="497" width="543" height="83"/>
                                 <color key="backgroundColor" red="0.81190483769999999" green="0.96864297880000005" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             </view>
+                            <slider opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="86400" minValue="600" maxValue="864000" continuous="NO" translatesAutoresizingMaskIntoConstraints="NO" id="n5N-Fs-eVB">
+                                <rect key="frame" x="17" y="102" width="572" height="31"/>
+                                <color key="minimumTrackTintColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="thumbTintColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <connections>
+                                    <action selector="timeSliderChanged:" destination="BYZ-38-t0r" eventType="valueChanged" id="1u0-HS-0z7"/>
+                                    <action selector="timeSliderEditDone:" destination="BYZ-38-t0r" eventType="editingDidEnd" id="bOs-y6-7OL"/>
+                                </connections>
+                            </slider>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="e1b-in-j8t">
+                                <rect key="frame" x="3" y="149" width="584" height="29"/>
+                                <segments>
+                                    <segment title="Humidity"/>
+                                    <segment title="Power"/>
+                                    <segment title="Surplus"/>
+                                </segments>
+                                <connections>
+                                    <action selector="GraphTypeChanged:" destination="BYZ-38-t0r" eventType="valueChanged" id="VdA-pr-XOh"/>
+                                </connections>
+                            </segmentedControl>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="e1b-in-j8t" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="10" id="8Wp-AS-cq7"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="e1b-in-j8t" secondAttribute="trailing" constant="10" id="GMZ-Km-vet"/>
                             <constraint firstItem="TnA-88-GCu" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="25" id="IuJ-Ps-wuL"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="n5N-Fs-eVB" secondAttribute="trailing" constant="10" id="NeT-pi-jgF"/>
                             <constraint firstItem="TnA-88-GCu" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" constant="10" id="T3A-Qq-8Oj"/>
+                            <constraint firstItem="n5N-Fs-eVB" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="10" id="UZh-3C-k7i"/>
                             <constraint firstItem="TnA-88-GCu" firstAttribute="top" secondItem="RHJ-It-OrC" secondAttribute="bottom" constant="16" id="leC-Yr-SST"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="TnA-88-GCu" secondAttribute="bottom" constant="20" id="wIv-Gw-pFF"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="GraphType" destination="e1b-in-j8t" id="nzB-iJ-2YZ"/>
+                        <outlet property="TimeSlider" destination="n5N-Fs-eVB" id="R0Q-ed-4HO"/>
                         <outlet property="currPVLabel" destination="VvF-YF-3ht" id="5Yl-Gr-bM2"/>
                         <outlet property="dailyPVLabel" destination="igp-OZ-UYE" id="dr1-pD-sqy"/>
                         <outlet property="dateLabel" destination="S5n-Kr-lnA" id="Kfg-LL-ZKx"/>
@@ -109,6 +136,7 @@
                         <outlet property="lpv" destination="TnA-88-GCu" id="C88-hp-D6f"/>
                         <outlet property="pvPredLabel" destination="oIw-GL-gfa" id="Irc-hQ-rDK"/>
                         <outlet property="pvSurplus" destination="LNI-0b-xRR" id="ZWH-Mr-cMC"/>
+                        <outlet property="reloadHistoryButton" destination="zY0-rw-rOu" id="x97-S6-zFb"/>
                         <outlet property="timeLabel" destination="IE5-HI-MXJ" id="tzD-vb-xEj"/>
                         <outlet property="zoeRoomHumidityLabel" destination="2A2-xQ-jOy" id="rV0-pl-ITt"/>
                     </connections>
