@@ -15,6 +15,7 @@
 @property(nonatomic) BOOL downloadingLatest;
 @property(nonatomic) BOOL newDataAvailable;
 @property(nonatomic) BOOL downloading;
+@property(nonatomic) BOOL parsing;
 @property(nonatomic,strong) NSString* activityStr;
 
 

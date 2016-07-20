@@ -133,11 +133,6 @@
 -(void)scatterPlotXV:(NSArray*)xv YV:(NSArray*) yv Color:(UIColor*)color {
     CGContextRef context = UIGraphicsGetCurrentContext();
     
-    //get the bounds
-    //CGRect f = self.frame;
-    //float w = f.size.width;
-    //float h = f.size.height;
-    
     double rangex = _xMax - _xMin;
     double rangey = _yMax - _yMin;
     

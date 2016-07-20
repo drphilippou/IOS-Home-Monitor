@@ -21,6 +21,10 @@
     NSTimer* downloadHistoryTimer;
     NSTimer* downloadLatestTimer;
     
+    //parse the data slowly in periodic function calls
+    NSMutableDictionary* dataToBeParsed;
+    NSTimer* dataParseTimer;
+    
     
 }
 @end
@@ -39,6 +43,11 @@
     TF = [[IOSTimeFunctions alloc] init];
     DB = [[HMdataStore alloc] init];
     self.newDataAvailable = false;
+    
+    //parse the received data
+    dataToBeParsed = [[NSMutableDictionary alloc] init];
+    dataParseTimer = nil;
+    
     return self;
 }
 
@@ -215,27 +224,31 @@
 }
 
 
-- (void)connectionDidFinishLoading:(NSURLConnection *)conn {
-    NSLog(@"did finish loading");
-    
-    //convert back to a dictionary
-    NSDictionary *rxJSON = [NSJSONSerialization JSONObjectWithData:webData options:0 error:nil];
-    
-    //shut down the web connection
-    webConnection = nil;
-    self.downloading = false;
-    
-    
+-(void)parseData {
+
     //parse
-    NSLog(@"Parsing the rx %lu entries",(unsigned long)rxJSON.count);
+    NSLog(@"Parsing the rx %lu entries",(unsigned long)dataToBeParsed.count);
+    
+    NSMutableDictionary* deleteMe = [[NSMutableDictionary alloc] init];
     
     int numAdded = 0;
-    for (NSString* k in rxJSON) {
+    int numProcessed = 0;
+    for (NSString* k in dataToBeParsed) {
         
-        NSDictionary* d = rxJSON[k];
+        NSDictionary* d = dataToBeParsed[k];
+        
+        //only process a small amount of the data
+        numProcessed++;
+        if (numProcessed >100) {
+            NSLog(@"break");
+            break;
+        }
+        
+        //remember the processed entries
+        [deleteMe setObject:d forKey:k];
+        
         
         float secs = [[d objectForKey:@"secs"] floatValue];
-        //NSLog(@"rx key,date = %ld, %@",(long)secs,[d objectForKey:@"time"]);
         if (![DB getHMDataAtSecs1970:secs]) {
             
             //create a new entry
@@ -266,6 +279,45 @@
     }
     NSLog(@"%d database entries added",numAdded);
     [DB saveDatabase];
+    
+    //remove the processed data
+    for (NSString* k in deleteMe) {
+        [dataToBeParsed removeObjectForKey:k];
+    }
+    //[dataToBeParsed removeAllObjects];
+    
+    //check we can stop the timer
+    if (dataToBeParsed.count == 0) {
+        NSLog(@"stopping the parse timer");
+        self.parsing = false;
+        [dataParseTimer invalidate];
+        dataParseTimer = nil;
+    }
+}
+
+
+
+- (void)connectionDidFinishLoading:(NSURLConnection *)conn {
+    NSLog(@"did finish loading");
+    
+    //convert back to a dictionary
+    NSDictionary *rxJSON = [NSJSONSerialization JSONObjectWithData:webData options:0 error:nil];
+    
+    //shut down the web connection
+    webConnection = nil;
+    self.downloading = false;
+    
+    
+    //add the received data to be parsed to the queue
+    //and start the timer
+    [dataToBeParsed addEntriesFromDictionary:rxJSON];
+    if (dataToBeParsed.count >0) {
+        NSLog(@"restarting data parse timer");
+        if (!dataParseTimer) {
+            self.parsing = true;
+            dataParseTimer = [NSTimer scheduledTimerWithTimeInterval:0.05 target:self selector:@selector(parseData) userInfo:nil repeats:YES];
+        }
+    }
     
     
     

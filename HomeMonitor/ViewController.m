@@ -125,20 +125,22 @@
         //NSTimeInterval s = d.secs;
         
         //update the graph
-        NSLog(@"updating graph");
-
-
-        //NSArray* yv = [DB getFieldAsString:@"pvSurplus" sinceSec:s-86400];
-        self.lpv.topMargin = 40;
-        self.lpv.bottomMargin = 10;
-        self.lpv.leftSideMargin = 40;
-        self.lpv.rightSideMargin = 10;
-        if (self.GraphType.selectedSegmentIndex ==0) {
-            [self plotZoeVsKeliiHumidity:self.TimeSlider.value];
-        } else if (self.GraphType.selectedSegmentIndex ==1) {
-            [self plotHomeEnergyVsPVPower:self.TimeSlider.value];
-        } else {
-            [self plotSurplus:self.TimeSlider.value];
+        if (!DM.parsing) {
+            NSLog(@"updating graph");
+            
+            
+            //NSArray* yv = [DB getFieldAsString:@"pvSurplus" sinceSec:s-86400];
+            self.lpv.topMargin = 40;
+            self.lpv.bottomMargin = 10;
+            self.lpv.leftSideMargin = 40;
+            self.lpv.rightSideMargin = 10;
+            if (self.GraphType.selectedSegmentIndex ==0) {
+                [self plotZoeVsKeliiHumidity:self.TimeSlider.value];
+            } else if (self.GraphType.selectedSegmentIndex ==1) {
+                [self plotHomeEnergyVsPVPower:self.TimeSlider.value];
+            } else {
+                [self plotSurplus:self.TimeSlider.value];
+            }
         }
 
     }
