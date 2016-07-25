@@ -30,6 +30,10 @@
 @property (nonatomic)int topMargin;
 @property (nonatomic)int bottomMargin;
 
+//report the values
+@property (nonatomic) BOOL showValues;
+@property (nonatomic,strong) NSMutableDictionary* marginValues;
+
 
 
 

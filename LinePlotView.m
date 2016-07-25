@@ -11,6 +11,7 @@
 @interface LinePlotView() 
 
 @property (nonatomic,strong) NSMutableDictionary* yLabels;
+@property (nonatomic,strong) NSMutableArray* marginSubviews;
 
 @end
 
@@ -23,6 +24,14 @@
     }
     return _yLabels;
 }
+
+-(NSMutableArray*) marginSubviews {
+    if (!_marginSubviews) {
+        _marginSubviews = [[NSMutableArray alloc] init];
+    }
+    return _marginSubviews;
+}
+
 
 -(NSArray*)xVals {
     if (!_xVals) {
@@ -97,10 +106,21 @@
     self.xVals = nil;
     self.yVals = nil;
     self.y2Vals = nil;
+    self.marginValues = nil;
+    self.showValues = false;
 }
 
 
 - (void)drawRect:(CGRect)rect {
+    
+    //delete old labels
+    for (UIView* sv in self.marginSubviews) {
+        [sv removeFromSuperview];
+    }
+    [self.marginSubviews removeAllObjects];
+    
+    
+    
     // Drawing code
     CGContextRef context = UIGraphicsGetCurrentContext();
     self.ctx = context;
@@ -127,8 +147,32 @@
     [self setYMaxAndYMin];
     [self drawLines];
     [self drawGrid];
+    [self drawValueLabels];
 }
 
+
+-(void)drawValueLabels {
+    
+
+    if (self.showValues && self.rightSideMargin >5) {
+        for (NSString* key in self.marginValues) {
+            NSDictionary* entry = [self.marginValues objectForKey:key];
+            double p = [entry[@"position"] doubleValue];
+            double x = [self xpt:1.0];
+            double y = [self ypt:p];
+            int h = [entry[@"height"] intValue];
+            
+    
+            UILabel* l = [[UILabel alloc] initWithFrame:CGRectMake(x, y, self.rightSideMargin, h)];
+            l.adjustsFontSizeToFitWidth = true;
+            l.textColor = entry[@"color"];
+            l.text = entry[@"value"];
+            [self addSubview:l];
+            [self.marginSubviews addObject:l];
+            
+        }
+    }
+}
 
 -(void)scatterPlotXV:(NSArray*)xv YV:(NSArray*) yv Color:(UIColor*)color {
     CGContextRef context = UIGraphicsGetCurrentContext();

@@ -159,6 +159,18 @@
     self.lpv.xVals = xv;
     self.lpv.yVals = yv;
     self.lpv.backgroundColor = [UIColor lightGrayColor];
+    self.lpv.showValues = true;
+    
+    
+    //plot the values in the margin
+    self.lpv.rightSideMargin = 50;
+    NSMutableDictionary* mv = [[NSMutableDictionary alloc] init];
+    [mv setObject:@{@"value":[yv lastObject],
+                    @"position":@"0",
+                    @"height":[NSNumber numberWithInt:30],
+                    @"color":[UIColor redColor]} forKey:@"top"];
+    self.lpv.marginValues = mv;
+    
     [self.lpv setNeedsDisplay];
 }
 
@@ -177,14 +189,32 @@
     self.lpv.yVals = yv;
     self.lpv.y2Vals = y2v;
     self.lpv.backgroundColor = [UIColor lightGrayColor];
-    [self.lpv setNeedsDisplay];
+    
+    if (xv.count >0) {
+        //plot the values in the margin
+        self.lpv.rightSideMargin = 40;
+        self.lpv.showValues = true;
+        NSMutableDictionary* mv = [[NSMutableDictionary alloc] init];
+        [mv setObject:@{@"value":[yv lastObject],
+                        @"position":@"0.0",
+                        @"height":[NSNumber numberWithInt:70],
+                        @"color":[UIColor redColor]} forKey:@"top"];
+        
+        [mv setObject:@{@"value":[y2v lastObject],
+                        @"position":@"0.25",
+                        @"height":[NSNumber numberWithInt:70],
+                        @"color":[UIColor blueColor]} forKey:@"mid"];
+        self.lpv.marginValues = mv;
+        
+        [self.lpv setNeedsDisplay];
+    }
 }
 
 -(void)plotHomeEnergyVsPVPower:(int)secs {
     HMData* d = [DB getLatestHMData];
     NSTimeInterval ls = d.secs;
     
-    [self.lpv setYMaxValue:8000];
+    //[self.lpv setYMaxValue:8000];
     [self.lpv setYMinValue:0];
     self.lpv.gridYIncrement = 1000;
     
@@ -197,6 +227,23 @@
     self.lpv.yVals = yv;
     self.lpv.y2Vals = y2v;
     self.lpv.backgroundColor = [UIColor lightGrayColor];
+    
+    //plot the values in the margin
+    self.lpv.rightSideMargin = 40;
+    self.lpv.showValues = true;
+    NSMutableDictionary* mv = [[NSMutableDictionary alloc] init];
+    [mv setObject:@{@"value":[yv lastObject],
+                    @"position":@"0.0",
+                    @"height":[NSNumber numberWithInt:20],
+                    @"color":[UIColor redColor]} forKey:@"top"];
+    
+    [mv setObject:@{@"value":[y2v lastObject],
+                    @"position":@"0.25",
+                    @"height":[NSNumber numberWithInt:20],
+                    @"color":[UIColor blueColor]} forKey:@"mid"];
+    self.lpv.marginValues = mv;
+    
+    
     [self.lpv setNeedsDisplay];
 }
 
