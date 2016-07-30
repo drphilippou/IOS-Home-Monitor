@@ -22,26 +22,18 @@
     NSTimer* checkForUpdatesTimer;
 
 }
+- (IBAction)reloadHistoryPressed:(id)sender;
+- (IBAction)timeSliderChanged:(id)sender;
+- (IBAction)timeSliderEditDone:(id)sender;
+- (IBAction)GraphTypeChanged:(id)sender;
+
+
 @property (strong,nonatomic) NSMutableDictionary* data;
 @property (weak, nonatomic) IBOutlet UILabel *timeLabel;
 @property (weak, nonatomic) IBOutlet UILabel *dateLabel;
-//@property (weak, nonatomic) IBOutlet UILabel *currPVLabel;
-//@property (weak, nonatomic) IBOutlet UILabel *dailyPVLabel;
-//@property (weak, nonatomic) IBOutlet UILabel *pvPredLabel;
-//@property (weak, nonatomic) IBOutlet UILabel *pvSurplus;
-//@property (weak, nonatomic) IBOutlet UILabel *homePowerLabel;
-//@property (weak, nonatomic) IBOutlet UILabel *zoeRoomHumidityLabel;
-//@property (weak, nonatomic) IBOutlet UILabel *keliiRoomHumidityLabel;
-//@property (weak, nonatomic) IBOutlet UILabel *dehumdifierEnergyLabel;
-
-//@property (strong, nonatomic) LinePlotView* lpv;
 @property (weak, nonatomic) IBOutlet LinePlotView *lpv;
-- (IBAction)reloadHistoryPressed:(id)sender;
 @property (weak, nonatomic) IBOutlet UIButton *reloadHistoryButton;
-- (IBAction)timeSliderChanged:(id)sender;
 @property (weak, nonatomic) IBOutlet UISlider *TimeSlider;
-- (IBAction)timeSliderEditDone:(id)sender;
-- (IBAction)GraphTypeChanged:(id)sender;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *GraphType;
 
 @property (weak, nonatomic) IBOutlet UIButton *ZoeHumidityButton;
@@ -77,17 +69,11 @@
     TF = [[IOSTimeFunctions alloc] init];
     DM = [[HMDownloadManager alloc] init];
     DB = [HMdataStore defaultStore];
-    checkForUpdatesTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(checkForUpdates) userInfo:nil repeats:YES];
-    
-    
-
-    //set the graphics
-    //self.reloadHistoryButton.backgroundColor = [UIColor lightGrayColor];
-    
-    //test graph
-    //CGRect r = CGRectMake(10, 500, 350, 150);
-    //self.lpv = [[LinePlotView alloc] initWithFrame:r ];
-    //[self.view addSubview:self.lpv];
+    checkForUpdatesTimer = [NSTimer scheduledTimerWithTimeInterval:0.1
+                                                            target:self
+                                                          selector:@selector(checkForUpdates)
+                                                          userInfo:nil
+                                                           repeats:YES];
     
 }
 
@@ -149,6 +135,16 @@
     return [UIColor lightGrayColor];
 }
 
+-(void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([segue.identifier isEqualToString:@"singleGraph"]) {
+        if ([segue.destinationViewController isKindOfClass:[singleGraphVC class]]) {
+            singleGraphVC* sgvc = (singleGraphVC*) segue.destinationViewController;
+            UIButton* b = (UIButton*) sender;
+            sgvc.buttonTitle = b.currentTitle;
+        }
+    }
+}
+
 
 -(void)updateButton:(UIButton*)Button Title:(NSString*)title Value:(NSNumber*)value ColorDef:(NSDictionary*)colorDef{
     
@@ -189,7 +185,6 @@
                                              [UIColor yellowColor]:[NSValue valueWithRange:NSMakeRange(1, 100)],
                                              [UIColor greenColor]:[NSValue valueWithRange:NSMakeRange(100, 2000)]};
         
-        
         NSDictionary* green = @{[UIColor greenColor]:[NSValue valueWithRange:NSMakeRange(0, 200000)]};
         
         
@@ -212,21 +207,18 @@
                      Title:[NSString stringWithFormat:@"%d\nZDP\n(watts)",zdp]
                      Value:[NSNumber numberWithInt:zdp]
                   ColorDef:dehumidPowerColors];
-        //if (zdp==0) self.ZoeDehumidPowerButton.alpha = 0.5;
         
         int kdp = (int) d.keliiDehumidPower;
         [self updateButton:self.KeliiDehumidPowerButton
                      Title:[NSString stringWithFormat:@"%d\nKDP\n(watts)",kdp]
                      Value:[NSNumber numberWithInt:kdp]
                   ColorDef:dehumidPowerColors];
-        //if (kdp==0) self.KeliiDehumidPowerButton.alpha = 0.5;
         
         int hp =  (int) d.homePower;
         [self updateButton:self.HomePowerButton
                      Title:[NSString stringWithFormat:@"%d\nHome\n(watts)",hp]
                      Value:[NSNumber numberWithInt:hp]
                   ColorDef:homePowerColors];
-        
         
         float he = d.homeEnergy;
         [self updateButton:self.homeEnergyButton
@@ -269,19 +261,13 @@
         
         
         
-        //self.dehumdifierEnergyLabel.text = [NSString stringWithFormat:@"Dehumidifier Energy:%d wh",d.dehumidEnergy];
-        
         DM.newDataAvailable = false;
         
-        //test getting data
-        //NSTimeInterval s = d.secs;
         
         //update the graph
         if (!DM.parsing) {
             NSLog(@"updating graph");
             
-            
-            //NSArray* yv = [DB getFieldAsString:@"pvSurplus" sinceSec:s-86400];
             self.lpv.topMargin = 40;
             self.lpv.bottomMargin = 10;
             self.lpv.leftSideMargin = 40;

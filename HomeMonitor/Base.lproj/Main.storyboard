@@ -70,7 +70,7 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <segue destination="J3q-lH-jBZ" kind="show" id="bPY-eL-i5D"/>
+                                    <segue destination="J3q-lH-jBZ" kind="show" identifier="singleGraph" id="bPY-eL-i5D"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="zE1-uz-pF3">
@@ -192,10 +192,10 @@
             </objects>
             <point key="canvasLocation" x="1071" y="306"/>
         </scene>
-        <!--View Controller-->
+        <!--Single GraphVC-->
         <scene sceneID="1Cw-Hr-CPP">
             <objects>
-                <viewController id="J3q-lH-jBZ" sceneMemberID="viewController">
+                <viewController id="J3q-lH-jBZ" customClass="singleGraphVC" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="4j0-AL-NSw"/>
                         <viewControllerLayoutGuide type="bottom" id="9OY-sp-bgK"/>
@@ -204,15 +204,22 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="b5J-s4-rUJ">
-                                <rect key="frame" x="171" y="289" width="42" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="OJx-mg-d8U" customClass="LinePlotView">
+                                <rect key="frame" x="27" y="91" width="367" height="610"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="OJx-mg-d8U" firstAttribute="trailing" secondItem="ZmL-wi-Pyd" secondAttribute="trailingMargin" id="D15-kU-gGO"/>
+                            <constraint firstItem="9OY-sp-bgK" firstAttribute="top" secondItem="OJx-mg-d8U" secondAttribute="bottom" constant="35" id="VBh-tf-Z1K"/>
+                            <constraint firstItem="OJx-mg-d8U" firstAttribute="leading" secondItem="ZmL-wi-Pyd" secondAttribute="leadingMargin" constant="10" id="WUl-I6-Wtx"/>
+                            <constraint firstItem="OJx-mg-d8U" firstAttribute="top" secondItem="4j0-AL-NSw" secondAttribute="bottom" constant="30" id="nU1-lS-QVC"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="plot" destination="OJx-mg-d8U" id="gAX-jq-YXf"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bHd-E2-c4H" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
