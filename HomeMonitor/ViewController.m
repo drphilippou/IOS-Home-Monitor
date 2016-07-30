@@ -25,14 +25,14 @@
 @property (strong,nonatomic) NSMutableDictionary* data;
 @property (weak, nonatomic) IBOutlet UILabel *timeLabel;
 @property (weak, nonatomic) IBOutlet UILabel *dateLabel;
-@property (weak, nonatomic) IBOutlet UILabel *currPVLabel;
-@property (weak, nonatomic) IBOutlet UILabel *dailyPVLabel;
-@property (weak, nonatomic) IBOutlet UILabel *pvPredLabel;
-@property (weak, nonatomic) IBOutlet UILabel *pvSurplus;
-@property (weak, nonatomic) IBOutlet UILabel *homePowerLabel;
-@property (weak, nonatomic) IBOutlet UILabel *zoeRoomHumidityLabel;
-@property (weak, nonatomic) IBOutlet UILabel *keliiRoomHumidityLabel;
-@property (weak, nonatomic) IBOutlet UILabel *dehumdifierEnergyLabel;
+//@property (weak, nonatomic) IBOutlet UILabel *currPVLabel;
+//@property (weak, nonatomic) IBOutlet UILabel *dailyPVLabel;
+//@property (weak, nonatomic) IBOutlet UILabel *pvPredLabel;
+//@property (weak, nonatomic) IBOutlet UILabel *pvSurplus;
+//@property (weak, nonatomic) IBOutlet UILabel *homePowerLabel;
+//@property (weak, nonatomic) IBOutlet UILabel *zoeRoomHumidityLabel;
+//@property (weak, nonatomic) IBOutlet UILabel *keliiRoomHumidityLabel;
+//@property (weak, nonatomic) IBOutlet UILabel *dehumdifierEnergyLabel;
 
 //@property (strong, nonatomic) LinePlotView* lpv;
 @property (weak, nonatomic) IBOutlet LinePlotView *lpv;
@@ -43,6 +43,18 @@
 - (IBAction)timeSliderEditDone:(id)sender;
 - (IBAction)GraphTypeChanged:(id)sender;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *GraphType;
+
+@property (weak, nonatomic) IBOutlet UIButton *ZoeHumidityButton;
+@property (weak, nonatomic) IBOutlet UIButton *KeliiHumidityButton;
+@property (weak, nonatomic) IBOutlet UIButton *HomePowerButton;
+@property (weak, nonatomic) IBOutlet UIButton *ZoeDehumidPowerButton;
+@property (weak, nonatomic) IBOutlet UIButton *KeliiDehumidPowerButton;
+@property (weak, nonatomic) IBOutlet UIButton *PVSurplusButton;
+@property (weak, nonatomic) IBOutlet UIButton *currPVButton;
+@property (weak, nonatomic) IBOutlet UIButton *dailyPVButton;
+@property (weak, nonatomic) IBOutlet UIButton *predPVButton;
+@property (weak, nonatomic) IBOutlet UIButton *homeEnergyButton;
+@property (weak, nonatomic) IBOutlet UIButton *dehumidEnergyButton;
 
 
 
@@ -62,28 +74,13 @@
     //test the version control
     
     //init variables
-
     TF = [[IOSTimeFunctions alloc] init];
     DM = [[HMDownloadManager alloc] init];
     DB = [HMdataStore defaultStore];
     checkForUpdatesTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(checkForUpdates) userInfo:nil repeats:YES];
     
     
-    //do we need to load any File History?
-    NSTimeInterval now = [TF currentTimeSec];
-    NSTimeInterval lastRxSecs = DB.HMMetadataVal.lastEntrySecs;
-    NSLog(@"last RX time= %@",[TF localTimehhmmssa:lastRxSecs]);
-    //if ((now - lastRxSecs)>3000) {
-        //start downloading history
-        [DM startDownloadingLatest];
-        [DM startDownloadingHistory];
-    //} else {
-        //start the incremental download
-      //  [DM startDownloadingLatest];
-        //[DM startDownloadingHistory];
-    //}
-    DM.newDataAvailable = true;
-    
+
     //set the graphics
     //self.reloadHistoryButton.backgroundColor = [UIColor lightGrayColor];
     
@@ -94,8 +91,77 @@
     
 }
 
+-(void)checkLastUpdatePeriod {
+    NSLog(@"check last update period");
+    
+    //check if we need to load any File History?
+    NSTimeInterval now = [TF currentTimeSec];
+    NSTimeInterval lastRxSecs = DB.HMMetadataVal.lastEntrySecs;
+    NSLog(@"last RX time= %@",[TF localTimehhmmssa:lastRxSecs]);
+    
+    double esecs = now-lastRxSecs;
+    if (esecs>3000) {
+        //start downloading history
+        [DM startDownloadingHistory];
+    } else {
+        NSLog(@"we are recent... not starting auto update");
+    }
+    DM.newDataAvailable = true;
+    
+}
 
 
+
+
+-(void)viewDidAppear:(BOOL)animated {
+    NSLog(@"view did appear");
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(checkLastUpdatePeriod)
+                                                 name:UIApplicationDidBecomeActiveNotification
+                                               object:nil];
+    
+    //check to see if we are recent
+    [self checkLastUpdatePeriod];
+    
+    //download the latest
+    [DM startDownloadingLatest];
+    
+    DM.newDataAvailable = true;
+    
+}
+
+-(void )viewWillDisappear:(BOOL)animated {
+    NSLog(@"view will disappear");
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+-(UIColor*)getHumidityColor:(int) value withColDef:(NSDictionary*)colorDef{
+    
+    
+    for (UIColor* color in colorDef) {
+        NSValue* dvalue = [colorDef objectForKey:color];
+        NSRange range = [dvalue rangeValue];
+        if ( value >= range.location && value <= range.location+range.length-1 ) {
+            return color;
+        }
+    }
+    return [UIColor lightGrayColor];
+}
+
+
+-(void)updateButton:(UIButton*)Button Title:(NSString*)title Value:(NSNumber*)value ColorDef:(NSDictionary*)colorDef{
+    
+    [Button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [Button setTitle:title forState:UIControlStateNormal];
+    Button.titleLabel.textAlignment = NSTextAlignmentCenter;
+    
+    CFNumberType numberType = CFNumberGetType((CFNumberRef)value);
+    if (numberType == kCFNumberSInt32Type) {
+        Button.backgroundColor = [self getHumidityColor:[value intValue] withColDef:colorDef];
+    }
+    
+}
 
 -(void)checkForUpdates {
     if (DM.downloading) {
@@ -110,14 +176,100 @@
         HMData* d = [DB getLatestHMData];
         self.timeLabel.text = d.time ;
         self.dateLabel.text = d.date;
-        self.currPVLabel.text = [NSString stringWithFormat:  @"Current PV Power %d wh",d.currPVPower];
-        self.dailyPVLabel.text = [NSString stringWithFormat:  @"PV Daily Total %d wh",d.pvEnergyToday];
-        self.pvPredLabel.text = [NSString stringWithFormat:@"PV Pred %d wh",d.pvPred];
-        self.pvSurplus.text = [NSString stringWithFormat:@"PV Surplus %5.1f",d.pvSurplus];
-        self.homePowerLabel.text = [NSString stringWithFormat:@"Home Power Use: %5.0f watts",d.homePower];
-        self.zoeRoomHumidityLabel.text = [NSString stringWithFormat:@"Zoe Room Humidity: %d ",d.zoeRoomHumidity];
-        self.keliiRoomHumidityLabel.text = [NSString stringWithFormat:@"Kelii Room Humidity: %d",d.keliiRoomHumidity];
-        self.dehumdifierEnergyLabel.text = [NSString stringWithFormat:@"Dehumidifier Energy:%d wh",d.dehumidEnergy];
+        
+        // define the colors
+        NSDictionary* humidityColors = @{[UIColor greenColor]:[NSValue valueWithRange:NSMakeRange(1, 74)],
+                                         [UIColor yellowColor]:[NSValue valueWithRange:NSMakeRange(75, 1)],
+                                         [UIColor redColor]:[NSValue valueWithRange:NSMakeRange(76, 100)]};
+        
+        NSDictionary* homePowerColors = @{[UIColor greenColor]:[NSValue valueWithRange:NSMakeRange(1, 4000)],
+                                          [UIColor yellowColor]:[NSValue valueWithRange:NSMakeRange(4001, 20000)]};
+        
+        NSDictionary* dehumidPowerColors = @{[UIColor lightGrayColor]:[NSValue valueWithRange:NSMakeRange(0, 1)],
+                                             [UIColor yellowColor]:[NSValue valueWithRange:NSMakeRange(1, 100)],
+                                             [UIColor greenColor]:[NSValue valueWithRange:NSMakeRange(100, 2000)]};
+        
+        
+        NSDictionary* green = @{[UIColor greenColor]:[NSValue valueWithRange:NSMakeRange(0, 200000)]};
+        
+        
+
+        
+        
+        //update buttons
+        [self updateButton:self.ZoeHumidityButton
+                     Title:[NSString stringWithFormat:@"%d\nZoe\n(RH)",d.zoeRoomHumidity]
+                     Value:[NSNumber numberWithInt:d.zoeRoomHumidity]
+                  ColorDef:humidityColors];
+        
+        [self updateButton:self.KeliiHumidityButton
+                     Title:[NSString stringWithFormat:@"%d\nKelii\n(RH)",d.keliiRoomHumidity]
+                     Value:[NSNumber numberWithInt:d.keliiRoomHumidity]
+                  ColorDef:humidityColors];
+        
+        int zdp = (int) d.zoeDehumidPower;
+        [self updateButton:self.ZoeDehumidPowerButton
+                     Title:[NSString stringWithFormat:@"%d\nZDP\n(watts)",zdp]
+                     Value:[NSNumber numberWithInt:zdp]
+                  ColorDef:dehumidPowerColors];
+        //if (zdp==0) self.ZoeDehumidPowerButton.alpha = 0.5;
+        
+        int kdp = (int) d.keliiDehumidPower;
+        [self updateButton:self.KeliiDehumidPowerButton
+                     Title:[NSString stringWithFormat:@"%d\nKDP\n(watts)",kdp]
+                     Value:[NSNumber numberWithInt:kdp]
+                  ColorDef:dehumidPowerColors];
+        //if (kdp==0) self.KeliiDehumidPowerButton.alpha = 0.5;
+        
+        int hp =  (int) d.homePower;
+        [self updateButton:self.HomePowerButton
+                     Title:[NSString stringWithFormat:@"%d\nHome\n(watts)",hp]
+                     Value:[NSNumber numberWithInt:hp]
+                  ColorDef:homePowerColors];
+        
+        
+        float he = d.homeEnergy;
+        [self updateButton:self.homeEnergyButton
+                     Title:[NSString stringWithFormat:@"%2.1f\nHome\n(kwh)",he]
+                     Value:[NSNumber numberWithInt:he]
+                  ColorDef:green];
+        
+        float surplus = d.pvSurplus;
+        [self updateButton:self.PVSurplusButton
+                     Title:[NSString stringWithFormat:@"%4.1f\nSurplus\n(kwh)",surplus]
+                     Value:[NSNumber numberWithInt:surplus]
+                  ColorDef:green];;
+        
+        int de = (int) d.dehumidEnergy;
+        [self updateButton:self.dehumidEnergyButton
+                     Title:[NSString stringWithFormat:@"%d\nDehumid\n(wh)",de]
+                     Value:[NSNumber numberWithInt:de]
+                  ColorDef:green];
+        
+        int cp = (int) d.currPVPower;
+        [self updateButton:self.currPVButton
+                     Title:[NSString stringWithFormat:@"%d\nCurr PV\n(watts)",cp]
+                     Value:[NSNumber numberWithInt:cp]
+                  ColorDef:@{[UIColor yellowColor]:[NSValue valueWithRange:NSMakeRange(1, 2000)],
+                             [UIColor greenColor]:[NSValue valueWithRange:NSMakeRange(2001, 20000)]}];
+        
+        int dp = (int) d.pvEnergyToday;
+        [self updateButton:self.dailyPVButton
+                     Title:[NSString stringWithFormat:@"%d\nDaily PV\n(wh)",dp]
+                     Value:[NSNumber numberWithInt:dp]
+                  ColorDef:@{[UIColor yellowColor]:[NSValue valueWithRange:NSMakeRange(1, 20000)],
+                             [UIColor greenColor]:[NSValue valueWithRange:NSMakeRange(20001, 100000)]}];
+        
+        int ppv = (int) d.pvPred;
+        [self updateButton:self.predPVButton
+                     Title:[NSString stringWithFormat:@"%d\nPred\n(wh)",ppv]
+                     Value:[NSNumber numberWithInt:ppv]
+                  ColorDef:@{[UIColor yellowColor]:[NSValue valueWithRange:NSMakeRange(1, 20000)],
+                             [UIColor greenColor]:[NSValue valueWithRange:NSMakeRange(20001, 100000)]}];
+        
+        
+        
+        //self.dehumdifierEnergyLabel.text = [NSString stringWithFormat:@"Dehumidifier Energy:%d wh",d.dehumidEnergy];
         
         DM.newDataAvailable = false;
         

@@ -263,7 +263,7 @@
             da.pvEnergyToday = [[d objectForKey:@"PVEngyToday"] intValue  ];
             da.zoeDehumidPower = [[d objectForKey:@"ZDP"] floatValue  ];
             da.time = [[d objectForKey:@"time"] copy];
-            da.homeEnergy = [[d objectForKey:@"HomeEnergy"] integerValue  ];
+            da.homeEnergy = [[d objectForKey:@"HomeEnergy"] floatValue  ];
             da.keliiDehumidPower = [[d objectForKey:@"KDP"] floatValue  ];
             da.homePower = [[d objectForKey:@"HomePower"] floatValue  ];
             da.shiller = [[d objectForKey:@"Shiller"] floatValue  ];
