@@ -49,6 +49,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *dehumidEnergyButton;
 
 
+- (IBAction)triggerSingleGraphSegue:(UIButton*)sender;
 
 @end
 
@@ -96,7 +97,12 @@
     
 }
 
-
+-(IBAction)triggerSingleGraphSegue:(UIButton *)sender {
+ 
+    NSLog(@"button %@ triggered Segue",sender.currentTitle);
+    [self.navigationController performSegueWithIdentifier:@"manSingleGraph" sender:self];
+//    [self performSegueWithIdentifier:@"manSingleGraph" sender:self];
+}
 
 
 -(void)viewDidAppear:(BOOL)animated {
@@ -136,7 +142,8 @@
 }
 
 -(void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([segue.identifier isEqualToString:@"singleGraph"]) {
+    NSLog(@"prepare for segue");
+    if ([segue.identifier isEqualToString:@"manSingleGraph"]) {
         if ([segue.destinationViewController isKindOfClass:[singleGraphVC class]]) {
             singleGraphVC* sgvc = (singleGraphVC*) segue.destinationViewController;
             UIButton* b = (UIButton*) sender;
@@ -408,4 +415,5 @@
     [self.lpv reset];
     DM.newDataAvailable = true;
 }
+
 @end

@@ -141,7 +141,7 @@
 
 
 -(HMMetadata*)HMMetadataVal {
-    if (!_HMMetadataVal) {
+    //if (!_HMMetadataVal) {
         //create the request
         NSEntityDescription *e = [[model entitiesByName] objectForKey:@"HMMetadata"];
         NSFetchRequest *rq = [[NSFetchRequest alloc] init];
@@ -160,7 +160,7 @@
             _HMMetadataVal.version = @"1.0";
             _HMMetadataVal.lastEntrySecs = 0;
         }
-    }
+    //}
     return _HMMetadataVal;
 }
 

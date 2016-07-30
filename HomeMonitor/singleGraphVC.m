@@ -43,8 +43,17 @@
         //this is home energy
         self.fieldName = @"homeEnergy";
         
+    } else if ([self.buttonTitle containsString:@"ZDP"]) {
+        self.fieldName = @"zoeDehumidPower";
+        
+    } else if ([self.buttonTitle containsString:@"KDP"]) {
+        //this is home energy
+        self.fieldName = @"keliiDehumidPower";
+        
     }
-    self.fieldName = @"homeEnergy";
+    self.fieldName = @"keliiDehumidPower";
+    
+    
 }
 
 

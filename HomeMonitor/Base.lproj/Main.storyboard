@@ -70,7 +70,7 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <segue destination="J3q-lH-jBZ" kind="show" identifier="singleGraph" id="bPY-eL-i5D"/>
+                                    <action selector="triggerSingleGraphSegue:" destination="BYZ-38-t0r" eventType="touchUpInside" id="kLW-wn-Wly"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="zE1-uz-pF3">
@@ -79,6 +79,9 @@
                                 <state key="normal" title="KH:">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="triggerSingleGraphSegue:" destination="BYZ-38-t0r" eventType="touchUpInside" id="jQX-eh-Gjn"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="xlU-np-7dh">
                                 <rect key="frame" x="237" y="246" width="65" height="70"/>
@@ -86,6 +89,9 @@
                                 <state key="normal" title="ZDP">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="triggerSingleGraphSegue:" destination="BYZ-38-t0r" eventType="touchUpInside" id="XaH-Tg-H52"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="I2s-xg-qIQ">
                                 <rect key="frame" x="304" y="246" width="65" height="70"/>
@@ -93,6 +99,9 @@
                                 <state key="normal" title="KDP">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="triggerSingleGraphSegue:" destination="BYZ-38-t0r" eventType="touchUpInside" id="m6G-40-DrO"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="jC2-uA-BDy">
                                 <rect key="frame" x="64" y="333" width="80" height="70"/>
@@ -100,6 +109,9 @@
                                 <state key="normal" title="HomeP">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="triggerSingleGraphSegue:" destination="BYZ-38-t0r" eventType="touchUpInside" id="2HT-NX-7FV"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="zvP-s5-LGM">
                                 <rect key="frame" x="226" y="333" width="70" height="70"/>
@@ -107,6 +119,9 @@
                                 <state key="normal" title="Surplus">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="triggerSingleGraphSegue:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Y0Z-RG-gk8"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="S1i-1o-qsA">
                                 <rect key="frame" x="151" y="333" width="70" height="70"/>
@@ -114,6 +129,9 @@
                                 <state key="normal" title="HomeE">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="triggerSingleGraphSegue:" destination="BYZ-38-t0r" eventType="touchUpInside" id="XIi-r3-4eb"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="1M1-Yl-7AI">
                                 <rect key="frame" x="64" y="419" width="70" height="70"/>
@@ -121,6 +139,9 @@
                                 <state key="normal" title="Cur PV">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="triggerSingleGraphSegue:" destination="BYZ-38-t0r" eventType="touchUpInside" id="9oU-td-DRy"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="ixl-rq-MiC">
                                 <rect key="frame" x="137" y="419" width="84" height="70"/>
@@ -128,6 +149,9 @@
                                 <state key="normal" title="Daily PV">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="triggerSingleGraphSegue:" destination="BYZ-38-t0r" eventType="touchUpInside" id="FiC-on-3sw"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="DyL-Zh-rPs">
                                 <rect key="frame" x="301" y="333" width="70" height="70"/>
@@ -135,6 +159,9 @@
                                 <state key="normal" title="DehumE">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="triggerSingleGraphSegue:" destination="BYZ-38-t0r" eventType="touchUpInside" id="7NT-O1-BKm"/>
+                                </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="humidityIcon" translatesAutoresizingMaskIntoConstraints="NO" id="wfl-JC-Jel">
                                 <rect key="frame" x="9" y="251" width="47" height="52"/>
@@ -151,6 +178,9 @@
                                 <state key="normal" title="Pred PV">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="triggerSingleGraphSegue:" destination="BYZ-38-t0r" eventType="touchUpInside" id="a2e-ie-FQI"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -190,7 +220,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1071" y="306"/>
+            <point key="canvasLocation" x="1097" y="374"/>
         </scene>
         <!--Single GraphVC-->
         <scene sceneID="1Cw-Hr-CPP">
@@ -201,7 +231,7 @@
                         <viewControllerLayoutGuide type="bottom" id="9OY-sp-bgK"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="ZmL-wi-Pyd">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="OJx-mg-d8U" customClass="LinePlotView">
@@ -237,11 +267,12 @@
                     <nil name="viewControllers"/>
                     <connections>
                         <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="bcX-pc-Nuo"/>
+                        <segue destination="J3q-lH-jBZ" kind="show" identifier="manSingleGraph" id="VF0-2C-0a1"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Jgb-YZ-83L" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="259" y="306"/>
+            <point key="canvasLocation" x="419" y="306"/>
         </scene>
     </scenes>
     <resources>
