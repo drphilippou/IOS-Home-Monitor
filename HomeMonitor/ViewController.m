@@ -100,8 +100,9 @@
 -(IBAction)triggerSingleGraphSegue:(UIButton *)sender {
  
     NSLog(@"button %@ triggered Segue",sender.currentTitle);
-    [self.navigationController performSegueWithIdentifier:@"manSingleGraph" sender:self];
-//    [self performSegueWithIdentifier:@"manSingleGraph" sender:self];
+    self.pressedButtonTitle = sender.currentTitle;
+    //[self.navigationController performSegueWithIdentifier:@"manSingleGraph" sender:self];
+    [self performSegueWithIdentifier:@"man2SingleGraph" sender:self];
 }
 
 
@@ -150,6 +151,14 @@
             sgvc.buttonTitle = b.currentTitle;
         }
     }
+    if ([segue.identifier isEqualToString:@"man2SingleGraph"]) {
+        if ([segue.destinationViewController isKindOfClass:[singleGraphVC class]]) {
+            singleGraphVC* sgvc = (singleGraphVC*) segue.destinationViewController;
+            //UIButton* b = (UIButton*) sender;
+            sgvc.buttonTitle = self.pressedButtonTitle;
+        }
+    }
+    
 }
 
 

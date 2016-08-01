@@ -11,6 +11,7 @@
 #import "singleGraphVC.h"
 
 @interface ViewController : UIViewController
+@property (nonatomic,copy) NSString* pressedButtonTitle;
 
 
 

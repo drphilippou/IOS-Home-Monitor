@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15G31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="XVW-WZ-alO">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="XVW-WZ-alO">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -31,7 +31,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zY0-rw-rOu">
-                                <rect key="frame" x="16" y="58" width="261" height="30"/>
+                                <rect key="frame" x="16" y="58" width="378" height="30"/>
                                 <state key="normal" title="Reload History">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -66,6 +66,8 @@
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="J9L-aB-LMh">
                                 <rect key="frame" x="64" y="246" width="85" height="70"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
+                                <size key="titleShadowOffset" width="2.2250738585072014e-308" height="2.2250738585072014e-308"/>
                                 <state key="normal" title="ZH:">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -216,6 +218,7 @@
                         <outlet property="predPVButton" destination="0nC-H2-avv" id="FrB-We-1U5"/>
                         <outlet property="reloadHistoryButton" destination="zY0-rw-rOu" id="x97-S6-zFb"/>
                         <outlet property="timeLabel" destination="IE5-HI-MXJ" id="tzD-vb-xEj"/>
+                        <segue destination="J3q-lH-jBZ" kind="show" identifier="man2SingleGraph" id="fQw-DB-FAy"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -231,7 +234,7 @@
                         <viewControllerLayoutGuide type="bottom" id="9OY-sp-bgK"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="ZmL-wi-Pyd">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="OJx-mg-d8U" customClass="LinePlotView">
@@ -280,4 +283,7 @@
         <image name="humidityIcon" width="172" height="183"/>
         <image name="pvIcon" width="164" height="160"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="fQw-DB-FAy"/>
+    </inferredMetricsTieBreakers>
 </document>
