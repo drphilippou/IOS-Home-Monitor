@@ -30,10 +30,16 @@
     //init variables
     TF = [[IOSTimeFunctions alloc] init];
     DB = [HMdataStore defaultStore];
+    
+    [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
 }
 
 
 -(void)viewWillAppear:(BOOL)animated {
+  
+    [super viewWillAppear:animated];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self  selector:@selector(orientationChanged)    name:UIDeviceOrientationDidChangeNotification  object:nil];
     
     //define the plot basics
     self.plot.gridYIncrement = 1;
@@ -98,9 +104,46 @@
 }
 
 
+
+
+
 -(void)viewDidAppear:(BOOL)animated {
     [self updatePlot];
 }
+
+
+-(void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
+}
+
+-(void)orientationChanged {
+    NSLog(@"orientation changed");
+    
+    UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
+    switch (orientation)
+    {
+        case UIInterfaceOrientationPortrait:
+        case UIInterfaceOrientationPortraitUpsideDown:
+        {
+            //load the portrait view
+        }
+            
+            break;
+        case UIInterfaceOrientationLandscapeLeft:
+        case UIInterfaceOrientationLandscapeRight:
+        {
+            //load the landscape view
+        }
+            break;
+        case UIInterfaceOrientationUnknown:break;
+    }
+    
+    [self updatePlot];
+    [self.plot setNeedsDisplay];
+}
+
 
 -(void)updatePlot {
     HMData* d = [DB getLatestHMData];
