@@ -60,6 +60,15 @@
 @implementation ViewController
 
 
+//these functions are not working
+- (BOOL) shouldAutorotate {
+    return NO;
+}
+
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
+}
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];

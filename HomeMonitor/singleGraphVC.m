@@ -10,6 +10,7 @@
 #import "LinePlotView.h"
 #import "HMDataStore.h"
 #import "IOSTimeFunctions.h"
+#import <math.h>
 
 @interface singleGraphVC () {
     
@@ -19,6 +20,9 @@
 @property (weak, nonatomic) IBOutlet LinePlotView *plot;
 @property (nonatomic,strong) NSString* fieldName;
 
+- (IBAction)pinchAction:(UIPinchGestureRecognizer *)sender;
+- (IBAction)panAction:(UIPanGestureRecognizer *)sender;
+
 @end
 
 @implementation singleGraphVC
@@ -26,12 +30,17 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    self.secs = [NSNumber numberWithFloat:86400.0];
     
     //init variables
     TF = [[IOSTimeFunctions alloc] init];
     DB = [HMdataStore defaultStore];
     
+    //start sending orientation notifications
     [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
+    
+    //redraw the view on rotation rather then scale
+    self.view.contentMode = UIViewContentModeRedraw;
 }
 
 
@@ -118,6 +127,106 @@
     [[NSNotificationCenter defaultCenter]removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
 }
 
+- (IBAction)pinchAction:(UIPinchGestureRecognizer *)sender {
+    
+    //determine if the pinch is along the x or y axis
+    //we ignore pinchs that are diagonal
+    PinchAxis pa = pinchGestureRecognizerAxis(sender);
+    if (pa == PinchAxisHorizontal) {
+        
+        //adjust the time scale
+        NSLog(@"x pinch %f",sender.scale);
+        double s = [self.secs doubleValue];
+        s /= sender.scale;
+        self.secs = [NSNumber numberWithDouble:s];
+        
+        //redraw the plot
+        [self updatePlot];
+        [self.plot setNeedsDisplay];
+    } else if (pa == PinchAxisVertical) {
+        //adjust the y scale
+        
+        //adjust the maximum and minimum value
+        double ymax = self.plot.yMax;
+        double ymin = self.plot.yMin;
+        NSLog(@"y pinch %f %f %f",sender.scale,ymax,ymin);
+        ymax /= sender.scale;
+        if (ymin != 0) {
+            //only scale the max
+            ymin *= sender.scale;
+        }
+        if (ymax>ymin) {
+            [self.plot setYMaxValue:ymax];
+            [self.plot setYMinValue:ymin];
+        } else {
+            [self.plot setYMaxValue:ymin];
+            [self.plot setYMinValue:ymax];
+            
+        }
+        
+        [self updatePlot];
+        [self.plot setNeedsDisplay];
+        
+    }
+    
+    //reset the scale back to 1.0 so we can get cumalative
+    [sender setScale:1.0];
+    
+
+}
+
+- (IBAction)panAction:(UIPanGestureRecognizer *)sender {
+    CGPoint p = [sender translationInView:self.view];
+    float fx = fabsf((float) p.x);
+    float fy = fabsf((float) p.y);
+    if (fx>10 || fy>10 ) {
+        if (fx>fy) {
+            NSLog(@"x pan action %f %f",p.x,p.y);
+            float xmax = self.plot.xMax;
+            float xmin = self.plot.xMin;
+            float xrange = fabsf(xmax-xmin);
+            float pc = p.x / self.plot.frame.size.width;
+            xmax -=  xrange*pc;
+            xmin -=  xrange*pc;
+            [self.plot setXMaxValue:xmax];
+            [self.plot setXMinValue:xmin];
+            
+        } else {
+            NSLog(@"y pan action %f %f",p.x,p.y);
+            float ymax = self.plot.yMax;
+            float ymin = self.plot.yMin;
+            float yrange = fabsf(ymax-ymin);
+            float pc = p.y / self.plot.frame.size.height;
+            ymax +=  yrange*pc;
+            ymin +=  yrange*pc;
+            [self.plot setYMaxValue:ymax];
+            [self.plot setYMinValue:ymin];
+            
+        }
+        [self updatePlot];
+        [self.plot setNeedsDisplay];
+        [sender setTranslation:CGPointZero inView:self.view];
+    }
+}
+
+PinchAxis pinchGestureRecognizerAxis(UIPinchGestureRecognizer *r) {
+    if (r.numberOfTouches == 2) {
+        UIView *view = r.view;
+        CGPoint touch0 = [r locationOfTouch:0 inView:view];
+        CGPoint touch1 = [r locationOfTouch:1 inView:view];
+        float arg = (touch1.y - touch0.y) / (touch1.x - touch0.x);
+        CGFloat tangent = fabsf(arg);
+        return
+        tangent <= 0.2679491924f ? PinchAxisHorizontal // 15 degrees
+        : tangent >= 3.7320508076f ? PinchAxisVertical   // 75 degrees
+        : PinchAxisNone;
+        
+    } else {
+        return PinchAxisNone;
+    }
+}
+
+
 -(void)orientationChanged {
     NSLog(@"orientation changed");
     
@@ -148,7 +257,7 @@
 -(void)updatePlot {
     HMData* d = [DB getLatestHMData];
     NSTimeInterval ls = d.secs;
-    double secs = 86400;
+    double secs = [self.secs doubleValue];
     
     
     //extract the data
@@ -194,5 +303,6 @@
     // Pass the selected object to the new view controller.
 }
 */
+
 
 @end

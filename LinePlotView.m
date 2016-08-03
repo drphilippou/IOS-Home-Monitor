@@ -62,6 +62,16 @@
     self.customYMaxLimits = true;
 }
 
+-(void)setXMinValue:(double)xMin {
+    _xMin = xMin;
+    self.customXMinLimits = true;
+}
+
+-(void)setXMaxValue:(double)x {
+    _xMax = x;
+    self.customXMaxLimits = true;
+}
+
 
 -(int)xpt:(float) px {
     int w = self.frame.size.width;
@@ -100,7 +110,8 @@
 }
 
 -(void)reset {
-    self.customXLimits = false;
+    self.customXMaxLimits = false;
+    self.customXMinLimits = false;
     self.customYMaxLimits = false;
     self.customYMinLimits = false;
     self.xVals = nil;
@@ -135,19 +146,53 @@
     }
     
     //draw axis
-    CGContextSetStrokeColorWithColor(context, [[UIColor blackColor] CGColor]);
-    CGContextSetLineWidth(context, 2.0);
-    CGContextMoveToPoint(context,   [self xpt:0]-1,[self ypt:0]);
-    CGContextAddLineToPoint(context,[self xpt:0]-1,[self ypt:1]-1);
-    CGContextAddLineToPoint(context,[self xpt:1]-1,[self ypt:1]-1);
-    CGContextDrawPath(context, kCGPathStroke);
+//    CGContextSetStrokeColorWithColor(context, [[UIColor blackColor] CGColor]);
+//    CGContextSetLineWidth(context, 2.0);
+//    CGContextMoveToPoint(context,   [self xpt:0]-1,[self ypt:0]);
+//    CGContextAddLineToPoint(context,[self xpt:0]-1,[self ypt:1]-1);
+//    CGContextAddLineToPoint(context,[self xpt:1]-1,[self ypt:1]-1);
+//    CGContextDrawPath(context, kCGPathStroke);
     
     
     [self setXMaxAndXMin];
     [self setYMaxAndYMin];
     [self drawLines];
+    [self drawAxis];
     [self drawGrid];
     [self drawValueLabels];
+}
+
+
+-(void) drawAxis {
+    
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    
+    CGContextSetStrokeColorWithColor(context, [[UIColor blackColor] CGColor]);
+    CGContextSetLineWidth(context,2);
+    
+    double rangey = _yMax - _yMin;
+    double rangex = _xMax - _xMin;
+    
+    double vy = 0;
+    double vx = 0;
+    if (_xMin >0) vx = _xMin;
+    if (_yMin >0) vy = _yMin;
+    
+    double px = (vx - _xMin)/rangex;
+    double py = 1.0 - (vy - _yMin)/rangey;
+    
+    //determine the coordinates of the axis
+    double x = [self xpt:px];
+    double y = [self ypt:py];
+    
+    //draw x axis
+    CGContextMoveToPoint(context,   x,[self ypt:0]);
+    CGContextAddLineToPoint(context,x,[self ypt:1]);
+    
+    //draw y axis
+    CGContextMoveToPoint(context,   [self xpt:0],y);
+    CGContextAddLineToPoint(context,[self xpt:1],y);
+    CGContextDrawPath(context, kCGPathStroke);
 }
 
 
@@ -214,10 +259,6 @@
 -(void)linePlot:(NSArray*)yv Color:(UIColor*)color {
     CGContextRef context = UIGraphicsGetCurrentContext();
     
-    //get the bounds
-    //CGRect f = self.frame;
-    //float w = f.size.width;
-    //float h = f.size.height;
     unsigned long n = yv.count;
     double rangey = _yMax - _yMin;
     
@@ -282,25 +323,28 @@
 }
 
 
-
 -(void)setXMaxAndXMin {
-    if (!self.customXLimits) {
-        if (self.xVals.count >0 ) {
+    if (self.xVals.count >0 ) {
+        
+        if (!self.customXMinLimits)
             self.xMin = [[self.xVals firstObject] floatValue];
+        if (!self.customXMaxLimits)
             self.xMax = [[self.xVals firstObject] floatValue];
-            for (NSString* vs in _xVals) {
-                if ([vs isKindOfClass:[NSString class]]) {
-                    double v = [vs doubleValue];
-                    if (v<self.xMin) self.xMin = v;
-                    if (v>self.xMax) self.xMax = v;
-                }
+        
+        for (NSString* vs in _xVals) {
+            if ([vs isKindOfClass:[NSString class]]) {
+                double v = [vs doubleValue];
+                if (v<self.xMin && !self.customXMinLimits) self.xMin = v;
+                if (v>self.xMax && !self.customXMaxLimits) self.xMax = v;
             }
-        } else {
-            self.xMin = 0;
-            self.xMax = 1.0;
         }
+    } else {
+        if (!self.customXMinLimits) self.xMin = 0;
+        if (!self.customXMaxLimits) self.xMax = 1.0;
     }
 }
+
+
 
 -(void)setYMaxAndYMin {
     if (self.yVals.count >0 ) {
@@ -362,6 +406,25 @@
                 [self.yLabels setObject:vStr forKey:yStr];
             }
         }
+        for (double v=0 ; v>self.yMin;  v -= self.gridYIncrement) {
+            if (v<self.yMax) {
+                double p = 1.0 - (v - _yMin)/rangey;
+                double y = [self ypt:p];
+                double xmin = [self xpt:0];
+                double xmax = [self xpt:1];
+                CGContextMoveToPoint(context, xmin, y);
+                CGContextAddLineToPoint(context, xmax, y);
+                CGContextDrawPath(context, kCGPathStroke);
+                
+                //reord the values for labels
+                NSString* vStr =[NSString stringWithFormat:@"%f",v];
+                NSString* yStr =[NSString stringWithFormat:@"%f",y];
+                [self.yLabels setObject:vStr forKey:yStr];
+            }
+        }
+        
+        
+        
     }
 }
 

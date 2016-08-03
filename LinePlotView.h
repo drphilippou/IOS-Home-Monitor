@@ -12,9 +12,6 @@
 
 @property (nonatomic)BOOL useGrid;
 @property (nonatomic)double gridYIncrement;
-@property (nonatomic)BOOL customXLimits;
-@property (nonatomic)BOOL customYMinLimits;
-@property (nonatomic)BOOL customYMaxLimits;
 @property (nonatomic)CGContextRef ctx;
 @property (nonatomic,copy) NSArray* xVals;
 @property (nonatomic,copy) NSArray* yVals;
@@ -40,6 +37,12 @@
 -(id)initWithFrame:(CGRect)f Data:(NSArray*)data;
 -(void)setYMinValue:(double)yMin;
 -(void)setYMaxValue:(double)yMax;
+-(void)setXMinValue:(double)xMin;
+-(void)setXMaxValue:(double)xMax;
+@property (nonatomic)BOOL customXMaxLimits;
+@property (nonatomic)BOOL customXMinLimits;
+@property (nonatomic)BOOL customYMinLimits;
+@property (nonatomic)BOOL customYMaxLimits;
 -(void)reset;
 
 //-(void)drawLine;

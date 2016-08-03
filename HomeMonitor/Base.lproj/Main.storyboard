@@ -240,9 +240,15 @@
                             <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="OJx-mg-d8U" customClass="LinePlotView">
                                 <rect key="frame" x="27" y="91" width="367" height="610"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <gestureRecognizers/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="hoX-Z9-OYq" appends="YES" id="Heu-mn-hYb"/>
+                                    <outletCollection property="gestureRecognizers" destination="cxf-th-Eo6" appends="YES" id="5O8-t5-Ga0"/>
+                                </connections>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="OJx-mg-d8U" firstAttribute="trailing" secondItem="ZmL-wi-Pyd" secondAttribute="trailingMargin" id="D15-kU-gGO"/>
                             <constraint firstItem="9OY-sp-bgK" firstAttribute="top" secondItem="OJx-mg-d8U" secondAttribute="bottom" constant="35" id="VBh-tf-Z1K"/>
@@ -255,6 +261,16 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bHd-E2-c4H" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <pinchGestureRecognizer id="hoX-Z9-OYq">
+                    <connections>
+                        <action selector="pinchAction:" destination="J3q-lH-jBZ" id="h9E-ZN-rKn"/>
+                    </connections>
+                </pinchGestureRecognizer>
+                <panGestureRecognizer minimumNumberOfTouches="1" id="cxf-th-Eo6">
+                    <connections>
+                        <action selector="panAction:" destination="J3q-lH-jBZ" id="Nqo-AP-680"/>
+                    </connections>
+                </panGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="1821" y="306"/>
         </scene>
