@@ -136,13 +136,17 @@
         
         //adjust the time scale
         NSLog(@"x pinch %f",sender.scale);
-        double s = [self.secs doubleValue];
-        s /= sender.scale;
-        self.secs = [NSNumber numberWithDouble:s];
+        double os = [self.secs doubleValue];
+        double ns = os/sender.scale;
+        double dt = (ns-os);
+        self.secs = [NSNumber numberWithDouble:ns];
         
-        //redraw the plot
-        [self updatePlot];
-        [self.plot setNeedsDisplay];
+        //adjust the xmin and xmax
+        double xmax = self.plot.xMax;
+        double xmin = self.plot.xMin;
+        [self.plot setXMaxValue:xmax+(dt/2)];
+        [self.plot setXMinValue:xmin-(dt/2)];
+        
     } else if (pa == PinchAxisVertical) {
         //adjust the y scale
         
@@ -163,11 +167,10 @@
             [self.plot setYMinValue:ymax];
             
         }
-        
-        [self updatePlot];
-        [self.plot setNeedsDisplay];
-        
     }
+    //redraw the plot
+    [self updatePlot];
+    [self.plot setNeedsDisplay];
     
     //reset the scale back to 1.0 so we can get cumalative
     [sender setScale:1.0];
@@ -259,10 +262,25 @@ PinchAxis pinchGestureRecognizerAxis(UIPinchGestureRecognizer *r) {
     NSTimeInterval ls = d.secs;
     double secs = [self.secs doubleValue];
     
+    //check to see if we have custom x bounds
+    NSArray* yv;
+    NSArray* xv;
+    if (self.plot.customXMaxLimits || self.plot.customXMinLimits) {
+        //extract the data in defined interval from [begin to end]
+        yv = [DB getFieldAsString:self.fieldName
+                          fromSec:self.plot.xMin
+                            toSec:self.plot.xMax];
+        xv = [DB getFieldAsString:@"secs"
+                          fromSec:self.plot.xMin
+                            toSec:self.plot.xMax];
+        
+    } else {
+        //extract the data in interval since last value
+        yv = [DB getFieldAsString:self.fieldName sinceSec:ls-secs];
+        xv = [DB getFieldAsString:@"secs" sinceSec:ls-secs];
+        
+    }
     
-    //extract the data
-    NSArray* yv = [DB getFieldAsString:self.fieldName sinceSec:ls-secs];
-    NSArray* xv = [DB getFieldAsString:@"secs" sinceSec:ls-secs];
     
     self.plot.xVals = xv;
     self.plot.yVals = yv;

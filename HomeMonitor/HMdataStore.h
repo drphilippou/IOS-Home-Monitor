@@ -26,9 +26,11 @@
 -(HMData*)createHMData;
 -(HMData*)getHMDataAtSecs1970:(NSTimeInterval)sec;
 -(HMData*)getLatestHMData;
+
+
 -(NSArray*)getHMDataSinceSecs1970:(NSTimeInterval)sec;
 -(NSArray*)getFieldAsString:(NSString*)s sinceSec:(NSTimeInterval)t;
-
+-(NSArray*)getFieldAsString:(NSString*)s fromSec:(NSTimeInterval)begin toSec:(NSTimeInterval)end;
 
 
 

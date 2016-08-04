@@ -194,7 +194,29 @@
     }
 }
 
-
+-(NSArray*)getHMDataSinceSecs1970From:(NSTimeInterval)begin To:(NSTimeInterval)end {
+    //create the request
+    NSEntityDescription *e = [[model entitiesByName] objectForKey:@"HMData"];
+    NSFetchRequest *rq = [[NSFetchRequest alloc] init];
+    [rq setEntity:e];
+    [rq setReturnsObjectsAsFaults:false];
+    
+    //grab the data in time order
+    NSSortDescriptor *sd = [NSSortDescriptor
+                            sortDescriptorWithKey:@"secs"
+                            ascending:YES];
+    [rq setSortDescriptors:[NSArray arrayWithObject:sd]];
+    
+    //set the predicate
+    NSPredicate *p = [NSPredicate predicateWithFormat:@"( secs.timeIntervalSince1970 > %f AND secs.timeIntervalSince1970 < %f)",begin,end];
+    [rq setPredicate:p];
+    
+    //retrieve the data
+    NSArray* res;
+    res = [context executeFetchRequest:rq error:nil];
+    return res;
+    
+}
 
 -(NSArray*)getHMDataSinceSecs1970:(NSTimeInterval)sec {
     
@@ -224,6 +246,29 @@
 
 -(NSArray*)getFieldAsString:(NSString *)s sinceSec:(NSTimeInterval)t {
     NSArray* d = [self getHMDataSinceSecs1970:t];
+    NSMutableArray* entries = [d valueForKey:s];
+    
+    //populate the different formats into strings
+    NSMutableArray* out = [[NSMutableArray alloc] init];
+    for (int i=0 ; i< entries.count; i++)  {
+        if ([entries[i] isKindOfClass:[NSDate class]]) {
+            NSTimeInterval ts = [entries[i] timeIntervalSinceReferenceDate];
+            NSString* s = [NSString stringWithFormat:@"%lf",ts];
+            [out addObject:s];
+        } else if ([entries[i] isKindOfClass:[NSString class]]) {
+            NSString* s = [entries[i] copy];
+            [out addObject:s];
+        } else {
+           NSString* s = [entries[i] stringValue];
+            [out addObject:s];
+        }
+    }
+    return out;
+}
+
+
+-(NSArray*)getFieldAsString:(NSString *)s fromSec:(NSTimeInterval)begin toSec:(NSTimeInterval)end {
+    NSArray* d = [self getHMDataSinceSecs1970From:begin To:end];
     NSMutableArray* entries = [d valueForKey:s];
     
     //populate the different formats into strings

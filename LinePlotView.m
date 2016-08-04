@@ -12,6 +12,7 @@
 
 @property (nonatomic,strong) NSMutableDictionary* yLabels;
 @property (nonatomic,strong) NSMutableArray* marginSubviews;
+@property (nonatomic,strong) UIView* plotCanvas;
 
 @end
 
@@ -103,11 +104,29 @@
 }
 
 
+//this is called when it is created programatically
 -(id)initWithFrame:(CGRect)f Data:(NSArray*)data {
     self = [super initWithFrame:f];
     _yVals = [[NSArray alloc] initWithArray:data copyItems:true];
+    [self baseClassInit];
     return self;
 }
+
+//this is called when it is created via a storyboard
+- (id)initWithCoder:(NSCoder *)aDecoder {
+    if ((self = [super initWithCoder:aDecoder])) {
+        [self baseClassInit];
+    }
+    return self;
+}
+
+- (void)baseClassInit {
+    //create a subview to hold the plot canvas
+    //this is used so I can limit the graph lines from overflowing onto the labels
+    //during pan events
+    self.plotCanvas = nil;
+}
+
 
 -(void)reset {
     self.customXMaxLimits = false;
@@ -125,11 +144,11 @@
 - (void)drawRect:(CGRect)rect {
     
     //delete old labels
+    [self.plotCanvas removeFromSuperview];
     for (UIView* sv in self.marginSubviews) {
         [sv removeFromSuperview];
     }
     [self.marginSubviews removeAllObjects];
-    
     
     
     // Drawing code
@@ -145,21 +164,26 @@
         return;
     }
     
-    //draw axis
-//    CGContextSetStrokeColorWithColor(context, [[UIColor blackColor] CGColor]);
-//    CGContextSetLineWidth(context, 2.0);
-//    CGContextMoveToPoint(context,   [self xpt:0]-1,[self ypt:0]);
-//    CGContextAddLineToPoint(context,[self xpt:0]-1,[self ypt:1]-1);
-//    CGContextAddLineToPoint(context,[self xpt:1]-1,[self ypt:1]-1);
-//    CGContextDrawPath(context, kCGPathStroke);
-    
-    
+    //draw the layers in the right order
+    //[self createPlotCanvas];
     [self setXMaxAndXMin];
     [self setYMaxAndYMin];
     [self drawLines];
     [self drawAxis];
     [self drawGrid];
     [self drawValueLabels];
+}
+
+
+-(void)createPlotCanvas {
+    CGRect pcf = CGRectMake([self xpt:0.0],
+                           [self ypt:0.0],
+                           [self xpt:1.0] - [self xpt:0.0],
+                           [self ypt:1.0] - [self ypt:0.0]);
+    UIView* pcv = [[UIView alloc] initWithFrame:pcf];
+    pcv.backgroundColor = [UIColor greenColor];
+    self.plotCanvas = pcv;
+    [self addSubview:pcv];
 }
 
 
