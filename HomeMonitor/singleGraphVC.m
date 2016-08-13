@@ -285,13 +285,14 @@ PinchAxis pinchGestureRecognizerAxis(UIPinchGestureRecognizer *r) {
     self.plot.xVals = xv;
     self.plot.yVals = yv;
     self.plot.backgroundColor = [UIColor lightGrayColor];
+    self.plot.showYAxisValues = TRUE;
     
     if (xv.count >0) {
         //plot the values in the margin
-        self.plot.leftSideMargin = 20;
+        self.plot.leftSideMargin = 30;
         self.plot.topMargin = 10;
-        self.plot.bottomMargin = 10;
-        self.plot.rightSideMargin = 40;
+        self.plot.bottomMargin = 20;
+        self.plot.rightSideMargin = 50;
         self.plot.showValues = true;
         NSMutableDictionary* mv = [[NSMutableDictionary alloc] init];
         [mv setObject:@{@"value":[yv lastObject],

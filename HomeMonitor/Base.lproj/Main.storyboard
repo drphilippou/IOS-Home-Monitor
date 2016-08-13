@@ -39,12 +39,12 @@
                                     <action selector="reloadHistoryPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="edm-Zt-0et"/>
                                 </connections>
                             </button>
-                            <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="TnA-88-GCu" customClass="LinePlotView">
-                                <rect key="frame" x="41" y="497" width="543" height="83"/>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="TnA-88-GCu" customClass="LinePlotView">
+                                <rect key="frame" x="16" y="497" width="388" height="219"/>
                                 <color key="backgroundColor" red="0.81190483769999999" green="0.96864297880000005" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             </view>
-                            <slider opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="86400" minValue="600" maxValue="864000" continuous="NO" translatesAutoresizingMaskIntoConstraints="NO" id="n5N-Fs-eVB">
-                                <rect key="frame" x="17" y="102" width="572" height="31"/>
+                            <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="86400" minValue="600" maxValue="864000" continuous="NO" translatesAutoresizingMaskIntoConstraints="NO" id="n5N-Fs-eVB">
+                                <rect key="frame" x="17" y="102" width="379" height="31"/>
                                 <color key="minimumTrackTintColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <color key="thumbTintColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <connections>
@@ -52,8 +52,8 @@
                                     <action selector="timeSliderEditDone:" destination="BYZ-38-t0r" eventType="editingDidEnd" id="bOs-y6-7OL"/>
                                 </connections>
                             </slider>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="e1b-in-j8t">
-                                <rect key="frame" x="3" y="149" width="584" height="29"/>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="e1b-in-j8t">
+                                <rect key="frame" x="30" y="149" width="374" height="29"/>
                                 <segments>
                                     <segment title="Humidity"/>
                                     <segment title="Power"/>
@@ -86,7 +86,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="xlU-np-7dh">
-                                <rect key="frame" x="237" y="246" width="65" height="70"/>
+                                <rect key="frame" x="239" y="246" width="85" height="70"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <state key="normal" title="ZDP">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -96,7 +96,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="I2s-xg-qIQ">
-                                <rect key="frame" x="304" y="246" width="65" height="70"/>
+                                <rect key="frame" x="329" y="246" width="83" height="70"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <state key="normal" title="KDP">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -105,8 +105,8 @@
                                     <action selector="triggerSingleGraphSegue:" destination="BYZ-38-t0r" eventType="touchUpInside" id="m6G-40-DrO"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="jC2-uA-BDy">
-                                <rect key="frame" x="64" y="333" width="80" height="70"/>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="jC2-uA-BDy">
+                                <rect key="frame" x="63" y="333" width="80" height="70"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <state key="normal" title="HomeP">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -116,7 +116,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="zvP-s5-LGM">
-                                <rect key="frame" x="226" y="333" width="70" height="70"/>
+                                <rect key="frame" x="223" y="333" width="70" height="70"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <state key="normal" title="Surplus">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -125,8 +125,8 @@
                                     <action selector="triggerSingleGraphSegue:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Y0Z-RG-gk8"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="S1i-1o-qsA">
-                                <rect key="frame" x="151" y="333" width="70" height="70"/>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="S1i-1o-qsA">
+                                <rect key="frame" x="148" y="333" width="70" height="70"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <state key="normal" title="HomeE">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -135,7 +135,7 @@
                                     <action selector="triggerSingleGraphSegue:" destination="BYZ-38-t0r" eventType="touchUpInside" id="XIi-r3-4eb"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="1M1-Yl-7AI">
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="1M1-Yl-7AI">
                                 <rect key="frame" x="64" y="419" width="70" height="70"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <state key="normal" title="Cur PV">
@@ -146,7 +146,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="ixl-rq-MiC">
-                                <rect key="frame" x="137" y="419" width="84" height="70"/>
+                                <rect key="frame" x="141" y="419" width="84" height="70"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <state key="normal" title="Daily PV">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -166,7 +166,7 @@
                                 </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="humidityIcon" translatesAutoresizingMaskIntoConstraints="NO" id="wfl-JC-Jel">
-                                <rect key="frame" x="9" y="251" width="47" height="52"/>
+                                <rect key="frame" x="9" y="255" width="47" height="52"/>
                             </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="PowerIcon" translatesAutoresizingMaskIntoConstraints="NO" id="fip-QF-sLk">
                                 <rect key="frame" x="9" y="342" width="47" height="52"/>
@@ -174,8 +174,14 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="pvIcon" translatesAutoresizingMaskIntoConstraints="NO" id="fkZ-1G-cON">
                                 <rect key="frame" x="9" y="428" width="47" height="52"/>
                             </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Delay: 0 " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Yia-bp-hqX">
+                                <rect key="frame" x="260" y="190" width="134" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="0nC-H2-avv">
-                                <rect key="frame" x="226" y="419" width="92" height="70"/>
+                                <rect key="frame" x="232" y="419" width="92" height="70"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <state key="normal" title="Pred PV">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -186,19 +192,9 @@
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="S1i-1o-qsA" firstAttribute="leading" secondItem="jC2-uA-BDy" secondAttribute="trailing" constant="4" id="6Ms-EQ-rcf"/>
-                            <constraint firstItem="e1b-in-j8t" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="10" id="8Wp-AS-cq7"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="e1b-in-j8t" secondAttribute="trailing" constant="10" id="GMZ-Km-vet"/>
-                            <constraint firstItem="TnA-88-GCu" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="25" id="IuJ-Ps-wuL"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="n5N-Fs-eVB" secondAttribute="trailing" constant="10" id="NeT-pi-jgF"/>
-                            <constraint firstItem="TnA-88-GCu" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" constant="10" id="T3A-Qq-8Oj"/>
-                            <constraint firstItem="n5N-Fs-eVB" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="10" id="UZh-3C-k7i"/>
-                            <constraint firstItem="TnA-88-GCu" firstAttribute="top" secondItem="1M1-Yl-7AI" secondAttribute="bottom" constant="16" id="ghW-pf-YQA"/>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="TnA-88-GCu" secondAttribute="bottom" constant="20" id="wIv-Gw-pFF"/>
-                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="ybm-CH-9yt"/>
+                    <simulatedOrientationMetrics key="simulatedOrientationMetrics"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina55"/>
                     <connections>
                         <outlet property="GraphType" destination="e1b-in-j8t" id="nzB-iJ-2YZ"/>
@@ -213,6 +209,7 @@
                         <outlet property="dailyPVButton" destination="ixl-rq-MiC" id="1cB-jU-paC"/>
                         <outlet property="dateLabel" destination="S5n-Kr-lnA" id="Kfg-LL-ZKx"/>
                         <outlet property="dehumidEnergyButton" destination="DyL-Zh-rPs" id="OiT-XE-zLX"/>
+                        <outlet property="elapsedTimeLabel" destination="Yia-bp-hqX" id="T9W-h5-PG9"/>
                         <outlet property="homeEnergyButton" destination="S1i-1o-qsA" id="XHW-ER-UAX"/>
                         <outlet property="lpv" destination="TnA-88-GCu" id="C88-hp-D6f"/>
                         <outlet property="predPVButton" destination="0nC-H2-avv" id="FrB-We-1U5"/>

@@ -20,6 +20,8 @@
     HMDownloadManager* DM;
     HMdataStore* DB;
     NSTimer* checkForUpdatesTimer;
+    NSTimer*  updateElapsedSecTimer;
+    NSTimeInterval lastestUpdateTime;
 
 }
 - (IBAction)reloadHistoryPressed:(id)sender;
@@ -31,6 +33,9 @@
 @property (strong,nonatomic) NSMutableDictionary* data;
 @property (weak, nonatomic) IBOutlet UILabel *timeLabel;
 @property (weak, nonatomic) IBOutlet UILabel *dateLabel;
+@property (weak, nonatomic) IBOutlet UILabel *elapsedTimeLabel;
+
+
 @property (weak, nonatomic) IBOutlet LinePlotView *lpv;
 @property (weak, nonatomic) IBOutlet UIButton *reloadHistoryButton;
 @property (weak, nonatomic) IBOutlet UISlider *TimeSlider;
@@ -85,6 +90,12 @@
                                                           userInfo:nil
                                                            repeats:YES];
     
+    updateElapsedSecTimer = [NSTimer scheduledTimerWithTimeInterval:1.0
+                                                            target:self
+                                                          selector:@selector(updateElapsedTime)
+                                                          userInfo:nil
+                                                           repeats:YES];
+    
 }
 
 -(void)checkLastUpdatePeriod {
@@ -136,6 +147,10 @@
 -(void )viewWillDisappear:(BOOL)animated {
     NSLog(@"view will disappear");
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
+    //update the local variable with the latest time
+    HMData* d = [DB getLatestHMData];
+    lastestUpdateTime = d.secs;
 }
 
 -(UIColor*)getHumidityColor:(int) value withColDef:(NSDictionary*)colorDef{
@@ -184,6 +199,28 @@
     
 }
 
+-(void)updateElapsedTime {
+    NSTimeInterval now = [TF currentTimeSec];
+    double elapsedSec = now - lastestUpdateTime;
+    
+    if (elapsedSec<60) {
+        self.elapsedTimeLabel.text = [NSString stringWithFormat:@"Delay %ds",(int)elapsedSec];
+        self.elapsedTimeLabel.backgroundColor = nil; //[UIColor greenColor];
+    } else {
+        int m = elapsedSec/60;
+        elapsedSec -= m * 60;
+        self.elapsedTimeLabel.text = [NSString stringWithFormat:@"Delay %dm %ds",m,(int)elapsedSec];
+        
+        if (m<6) {
+            self.elapsedTimeLabel.backgroundColor = nil;// [UIColor greenColor];
+        } else {
+            self.elapsedTimeLabel.backgroundColor = [UIColor yellowColor];
+        }
+    }
+    
+    
+}
+
 -(void)checkForUpdates {
     if (DM.downloading) {
         [self.reloadHistoryButton setTitle:DM.activityStr forState:UIControlStateNormal];
@@ -195,6 +232,7 @@
         
         //grab the latest data
         HMData* d = [DB getLatestHMData];
+        lastestUpdateTime = d.secs;
         self.timeLabel.text = d.time ;
         self.dateLabel.text = d.date;
         

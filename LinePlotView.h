@@ -29,8 +29,10 @@
 
 //report the values
 @property (nonatomic) BOOL showValues;
+@property (nonatomic) BOOL autoLabelYValues;
 @property (nonatomic,strong) NSMutableDictionary* marginValues;
 
+@property (nonatomic) BOOL showYAxisValues;
 
 
 
