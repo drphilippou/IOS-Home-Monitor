@@ -96,6 +96,27 @@
                                                           userInfo:nil
                                                            repeats:YES];
     
+    //format all the buttons
+    
+    [self configButtons:self.ZoeHumidityButton];
+    [self configButtons:self.KeliiHumidityButton];
+    [self configButtons:self.ZoeDehumidPowerButton];
+    [self configButtons:self.KeliiDehumidPowerButton];
+    [self configButtons:self.HomePowerButton];
+    [self configButtons:self.homeEnergyButton];
+    [self configButtons:self.PVSurplusButton];
+    [self configButtons:self.dehumidEnergyButton];
+    [self configButtons:self.currPVButton];
+    [self configButtons:self.dailyPVButton];
+    [self configButtons:self.predPVButton];
+    
+}
+
+-(void)configButtons:(UIButton*) button;
+{
+    button.layer.borderWidth = 2.0f;
+    button.layer.borderColor = [UIColor blackColor].CGColor;
+    
 }
 
 -(void)checkLastUpdatePeriod {
@@ -305,22 +326,19 @@
         [self updateButton:self.currPVButton
                      Title:[NSString stringWithFormat:@"%d\nCurr PV\n(watts)",cp]
                      Value:[NSNumber numberWithInt:cp]
-                  ColorDef:@{[UIColor yellowColor]:[NSValue valueWithRange:NSMakeRange(1, 2000)],
-                             [UIColor greenColor]:[NSValue valueWithRange:NSMakeRange(2001, 20000)]}];
+                  ColorDef:green];
         
         int dp = (int) d.pvEnergyToday;
         [self updateButton:self.dailyPVButton
                      Title:[NSString stringWithFormat:@"%d\nDaily PV\n(wh)",dp]
                      Value:[NSNumber numberWithInt:dp]
-                  ColorDef:@{[UIColor yellowColor]:[NSValue valueWithRange:NSMakeRange(1, 20000)],
-                             [UIColor greenColor]:[NSValue valueWithRange:NSMakeRange(20001, 100000)]}];
+                  ColorDef:green];
         
         int ppv = (int) d.pvPred;
         [self updateButton:self.predPVButton
                      Title:[NSString stringWithFormat:@"%d\nPred\n(wh)",ppv]
                      Value:[NSNumber numberWithInt:ppv]
-                  ColorDef:@{[UIColor yellowColor]:[NSValue valueWithRange:NSMakeRange(1, 20000)],
-                             [UIColor greenColor]:[NSValue valueWithRange:NSMakeRange(20001, 100000)]}];
+                  ColorDef:green];
         
         
         
@@ -331,8 +349,8 @@
         if (!DM.parsing) {
             NSLog(@"updating graph");
             
-            self.lpv.topMargin = 40;
-            self.lpv.bottomMargin = 10;
+            self.lpv.topMargin = 10;
+            self.lpv.bottomMargin = 20;
             self.lpv.leftSideMargin = 40;
             self.lpv.rightSideMargin = 10;
             if (self.GraphType.selectedSegmentIndex ==0) {

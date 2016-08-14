@@ -554,7 +554,7 @@
                                 [NSNumber numberWithDouble:7.0*86400.0]];
         
         
-        NSArray* timeFormats = @[@"HH:mm", @"HH:mm", @"HH:mm",@"HH:mm", @"ha", @"ha",   @"ha",   @"ha",   @"ha",   @"MM/dd",   @"MM/dd",   @"MM/dd",   @"MM/dd"];
+        NSArray* timeFormats = @[@"HH:mm", @"HH:mm", @"HH:mm",@"HH:mm", @"H", @"H",   @"H",   @"H",   @"H",   @"MM/dd",   @"MM/dd",   @"MM/dd",   @"MM/dd"];
         
         
         double rangex = _xMax - _xMin;
