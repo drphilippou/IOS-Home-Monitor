@@ -52,6 +52,7 @@
     
     //define the plot basics
     self.plot.gridYIncrement = 1;
+    self.plot.fillLinePlot = TRUE;
     
     
     //get the data
@@ -75,6 +76,7 @@
     } else if ([self.buttonTitle containsString:@"Home\n(watts)"]) {
         self.fieldName = @"homePower";
         self.plot.gridYIncrement = 1000;
+        [self.plot setYMinValue:0];
         
     } else if ([self.buttonTitle containsString:@"Home\n(kwh)"]) {
         //this is home energy
@@ -110,6 +112,10 @@
         
     }
     
+    //set the title
+    self.navigationItem.title = self.fieldName;
+    
+    
 }
 
 
@@ -122,6 +128,8 @@
 
 
 -(void)viewWillDisappear:(BOOL)animated {
+    self.plot.fillLinePlot = false;
+    
     [super viewWillDisappear:animated];
     
     [[NSNotificationCenter defaultCenter]removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];

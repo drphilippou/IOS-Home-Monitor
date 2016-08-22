@@ -35,6 +35,7 @@
 @property (nonatomic) BOOL showYAxisValues;
 
 
+@property (nonatomic) BOOL fillLinePlot;
 
 -(id)initWithFrame:(CGRect)f Data:(NSArray*)data;
 -(void)setYMinValue:(double)yMin;

@@ -196,36 +196,50 @@
     }
     
     //draw the layers in the right order
-    //[self createPlotCanvas];
+    NSArray* sl = [self.layer.sublayers copy];
+    for (CALayer* l in sl) {
+        NSLog(@"layer %@",l.description);
+        [l removeFromSuperlayer];
+    }
+    
     [self setXMaxAndXMin];
     [self setYMaxAndYMin];
+    [self createPlotCanvas];
     [self drawLines];
     [self drawAxis];
     [self drawGrid];
     [self drawXGrid];
     [self drawValueLabels];
     [self drawYAxisValues];
+    
+    
 }
 
 
 -(void)createPlotCanvas {
-    CGRect pcf = CGRectMake([self xpt:0.0],
-                           [self ypt:0.0],
-                           [self xpt:1.0] - [self xpt:0.0],
-                           [self ypt:1.0] - [self ypt:0.0]);
-    UIView* pcv = [[UIView alloc] initWithFrame:pcf];
-    pcv.backgroundColor = [UIColor greenColor];
-    self.plotCanvas = pcv;
-    [self addSubview:pcv];
+
+    UIBezierPath* bp = [[UIBezierPath alloc] init];
+    [bp moveToPoint:CGPointMake([self xpt:0],[self ypt:0])];
+    [bp addLineToPoint:CGPointMake([self xpt:1],[self ypt:0])];
+    [bp addLineToPoint:CGPointMake([self xpt:1],[self ypt:1])];
+    [bp addLineToPoint:CGPointMake([self xpt:0],[self ypt:1])];
+    [bp closePath];
+    
+    CAShapeLayer* mylayer = [[CAShapeLayer alloc] init];
+    mylayer.path = bp.CGPath;
+    mylayer.fillColor = [UIColor grayColor].CGColor;
+    //mylayer.zPosition = -1;
+    
+    [self.layer addSublayer:mylayer];
 }
 
 
 -(void) drawAxis {
     
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    
-    CGContextSetStrokeColorWithColor(context, [[UIColor blackColor] CGColor]);
-    CGContextSetLineWidth(context,2);
+    UIBezierPath* bp = [[UIBezierPath alloc] init];
+    CAShapeLayer* ml = [[CAShapeLayer alloc] init];
+    ml.strokeColor = [[UIColor blackColor] CGColor];
+    ml.lineWidth = 2;
     
     double rangey = _yMax - _yMin;
     double rangex = _xMax - _xMin;
@@ -243,13 +257,15 @@
     double y = [self ypt:py];
     
     //draw x axis
-    CGContextMoveToPoint(context,   x,[self ypt:0]);
-    CGContextAddLineToPoint(context,x,[self ypt:1]);
+    [bp moveToPoint:CGPointMake(x, [self ypt:0])];
+    [bp addLineToPoint:CGPointMake(x, [self ypt:1])];
     
     //draw y axis
-    CGContextMoveToPoint(context,   [self xpt:0],y);
-    CGContextAddLineToPoint(context,[self xpt:1],y);
-    CGContextDrawPath(context, kCGPathStroke);
+    [bp moveToPoint:CGPointMake([self xpt:0], y)];
+    [bp addLineToPoint:CGPointMake([self xpt:1], y)];
+
+    ml.path = [bp CGPath];
+    [self.layer addSublayer:ml];
 }
 
 
@@ -269,18 +285,23 @@
             } else {
                 s = [NSString stringWithFormat:@"%.1f",value];
             }
-                
             
+            //calculate the height of the label
             double h =20;
+            int yv = [d[@"posint"] intValue] - h/2;
+            int ymax = [self ypt:1.0] - h/2;
             
-            UILabel* l = [[UILabel alloc] initWithFrame:CGRectMake([self xpt:1.0]+2,
-                                                                   [d[@"posint"] intValue]- h/2,
-                                                                   self.rightSideMargin,h)];
-            l.adjustsFontSizeToFitWidth = true;
-            l.textColor = d[@"color"];
-            l.text = s;
-            [self addSubview:l];
-            [self.marginSubviews addObject:l];
+            if (yv >0 && yv < ymax) {
+                
+                UILabel* l = [[UILabel alloc] initWithFrame:CGRectMake([self xpt:1.0]+2,yv,
+                                                                       self.rightSideMargin,h)];
+                
+                l.adjustsFontSizeToFitWidth = true;
+                l.textColor = d[@"color"];
+                l.text = s;
+                [self addSubview:l];
+                [self.marginSubviews addObject:l];
+            }
         }
         
     } else {
@@ -337,13 +358,11 @@
 }
 
 -(void)scatterPlotXV:(NSArray*)xv YV:(NSArray*) yv Color:(UIColor*)color {
-    CGContextRef context = UIGraphicsGetCurrentContext();
+    UIBezierPath* bp = [[UIBezierPath alloc] init];
     
     double rangex = _xMax - _xMin;
     double rangey = _yMax - _yMin;
     
-    CGContextSetStrokeColorWithColor(context, [color CGColor]);
-    CGContextSetLineWidth(context, 1.0);
     
     //scatter plot
     NSString* vsx = [xv firstObject];
@@ -356,10 +375,11 @@
     
     double x = [self xpt:px];
     double y = [self ypt:py];
-    CGContextMoveToPoint(context, x,y);
+    [bp moveToPoint:CGPointMake(x, y)];
     
     //record the final value so we know where to hang the value labels
     int finalYPos = (int) y;
+    int finalXPos = (int) x;
     double finalYVal = vy;
     
     for (unsigned long i= 1 ; i<yv.count ; i++) {
@@ -373,23 +393,69 @@
         
         x = [self xpt:px];
         y = [self ypt:py];
-        CGContextAddLineToPoint(context, x, y);
+        [bp addLineToPoint:CGPointMake(x, y)];
         finalYPos = (int) y;
+        finalXPos = (int) x;
         finalYVal = vy;
         
         
     }
-    CGContextDrawPath(context, kCGPathStroke);
+    
+    
     
     //add an entry so we can label the final value automatically
     [self.finalYValues addObject:@{@"posint":[NSNumber numberWithInteger:finalYPos],
                                    @"color":color,
                                    @"value":[NSNumber numberWithDouble:finalYVal]}];
+
+
+    CAShapeLayer* mylayer = [self getMaskedLayer];
+    mylayer.strokeColor = [color CGColor];
+    
+    
+    //close the shape and fill the object
+    if (self.fillLinePlot) {
+        //calculate the height of the zero crossing
+        py = 1.0 + _yMin/rangey;
+        double zy = [self ypt:py];
+        
+        [bp addLineToPoint:CGPointMake(finalXPos, zy)];
+        [bp addLineToPoint:CGPointMake([self xpt:0], zy)];
+        [bp closePath];
+        mylayer.fillColor = [color CGColor];
+        mylayer.strokeColor = [[UIColor blackColor] CGColor];
+        //mylayer.opacity = 0.4;
+    }
+    
+    
+    mylayer.path = bp.CGPath;
+    [self.layer addSublayer:mylayer];
     
 }
 
+
+-(CAShapeLayer*)getMaskedLayer {
+    float xmin = [self xpt:0];
+    float xmax = [self xpt:1];
+    float ymin = [self ypt:0];
+    float ymax = [self ypt:1];
+    
+    CAShapeLayer* mylayer = [[CAShapeLayer alloc] init];
+    //mylayer.path = bp.CGPath;
+    mylayer.fillColor = [[UIColor clearColor] CGColor];
+    mylayer.strokeColor = [[UIColor blackColor] CGColor];
+    mylayer.backgroundColor = [[UIColor clearColor] CGColor];
+    mylayer.frame = CGRectMake(xmin, ymin, xmax-xmin, ymax-ymin);
+    mylayer.bounds = CGRectMake(xmin, ymin, xmax-xmin, ymax-ymin);
+    mylayer.masksToBounds = true;
+    return mylayer;
+}
+
+
+
 -(void)linePlot:(NSArray*)yv Color:(UIColor*)color {
-    CGContextRef context = UIGraphicsGetCurrentContext();
+    //CGContextRef context = UIGraphicsGetCurrentContext();
+    UIBezierPath* bp = [[UIBezierPath alloc] init];
     
     unsigned long n = yv.count;
     double rangey = _yMax - _yMin;
@@ -402,11 +468,9 @@
     double px = 0;
     double py = 1.0 - (v - _yMin)/rangey;
 
-    int x = [self xpt:px]; //0;
-    int y = [self ypt:py]; //p * h;
-    CGContextSetStrokeColorWithColor(context, [color CGColor]);
-    CGContextSetLineWidth(context, 1.0);
-    CGContextMoveToPoint(context, x, y);
+    int x = [self xpt:px];
+    int y = [self ypt:py];
+    [bp moveToPoint:CGPointMake(x, y)];
     
     //record the final value so we know where to hang the value labels
     int finalYPos = y;
@@ -420,17 +484,22 @@
             v = [vs doubleValue];
             py = 1.0 - (v - _yMin)/rangey;
             y = [self ypt:py]; //p * h;
-            CGContextAddLineToPoint(context, x, y);
+            [bp addLineToPoint:CGPointMake(x, y)];
     
             finalYPos = y;
             finalYVal = v;
             
         }
     }
-    CGContextDrawPath(context, kCGPathStroke);
+    //CGContextDrawPath(context, kCGPathStroke);
     [self.finalYValues addObject:@{@"posint":[NSNumber numberWithInteger:finalYPos],
                                    @"color":color,
                                    @"value":[NSNumber numberWithDouble:finalYVal]}];
+    CAShapeLayer* mylayer = [self getMaskedLayer];
+    mylayer.strokeColor = [color CGColor];
+    mylayer.path = bp.CGPath;
+    [self.layer addSublayer:mylayer];
+    
 
 }
 
@@ -531,13 +600,15 @@
     }
     [self.xAxisLabelSubviews removeAllObjects];
     
-        CGContextRef context = UIGraphicsGetCurrentContext();
+    UIBezierPath* bp = [[UIBezierPath alloc] init];
     
     if (self.gridYIncrement != 0) {
-        CGContextSetStrokeColorWithColor(context, [[UIColor blackColor] CGColor]);
-        CGFloat dash[] = {0.0, 2.0};
-        CGContextSetLineDash(context, 0.0, dash, 2);
-        CGContextSetLineWidth(context, 0.5);
+        
+        CAShapeLayer* mylayer = [self getMaskedLayer];
+        mylayer.lineDashPattern = [NSArray arrayWithObjects:[NSNumber numberWithInt:1], [NSNumber numberWithInt:2], nil];
+        
+        mylayer.lineWidth  = 0.5;
+        mylayer.strokeColor = [[UIColor blackColor] CGColor];
         
         NSArray* timeLimits = @[[NSNumber numberWithDouble:60.0],
                                 [NSNumber numberWithDouble:300.0],
@@ -591,13 +662,15 @@
                 double x = [self xpt:p];
                 double ymin = [self ypt:0];
                 double ymax = [self ypt:1];
-                CGContextMoveToPoint(context, x, ymin);
-                CGContextAddLineToPoint(context, x, ymax);
-                CGContextDrawPath(context, kCGPathStroke);
+                [bp moveToPoint:CGPointMake(x, ymin)];
+                [bp addLineToPoint:CGPointMake(x, ymax)];
+                mylayer.path = [bp CGPath];
+                [self.layer addSublayer:mylayer];
+                
+                
                 
                 NSDate *epochNSDate = [[NSDate alloc] initWithTimeIntervalSince1970:v];
                 NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-                //[dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss zzz"];
                 NSString* dst = [timeFormats objectAtIndex:indx];
                 [dateFormatter setDateFormat:dst];
                 NSTimeZone* TZ = [NSTimeZone timeZoneWithName:@"HST"];
@@ -606,13 +679,7 @@
                 NSLog (@"Epoch time %f equates to %@", v, datestr );
 
                 
-                
-                //double x = 0;
-                //double y = [key doubleValue] - 10;
-                
-                int h = 20;
-                
-                
+
                 UILabel* l = [[UILabel alloc] initWithFrame:CGRectMake(x-15, ymax, 30, self.bottomMargin)];
                 l.adjustsFontSizeToFitWidth = true;
                 l.textColor = [UIColor blackColor];
@@ -620,28 +687,20 @@
                 [self addSubview:l];
                 [self.xAxisLabelSubviews addObject:l];
 
-//                //reord the values for labels
-//                NSString* vStr;
-//                if (floor(v)==v) {
-//                    vStr = [NSString stringWithFormat:@"%d",(int) v];
-//                } else {
-//                    vStr = [NSString stringWithFormat:@"%.1f", v];
-//                }
-//                NSString* yStr =[NSString stringWithFormat:@"%f",y];
-//                [self.yLabels setObject:vStr forKey:yStr];
             }
         }
     }
 }
 
+
 -(void)drawGrid {
-    CGContextRef context = UIGraphicsGetCurrentContext();
     
     if (self.gridYIncrement != 0) {
-        CGContextSetStrokeColorWithColor(context, [[UIColor blackColor] CGColor]);
-        CGFloat dash[] = {0.0, 2.0};
-        CGContextSetLineDash(context, 0.0, dash, 2);
-        CGContextSetLineWidth(context, 0.5);
+        UIBezierPath* bp = [[UIBezierPath alloc] init];
+        CAShapeLayer* mylayer = [self getMaskedLayer];
+        mylayer.strokeColor = [[UIColor blackColor] CGColor];
+        mylayer.lineWidth = 0.5;
+        mylayer.lineDashPattern = [NSArray arrayWithObjects:[NSNumber numberWithInt:1], [NSNumber numberWithInt:2], nil];
         
         double rangey = _yMax - _yMin;
         int exponent = (int) log10(rangey);       // See comment below.
@@ -693,11 +752,10 @@
                 double y = [self ypt:p];
                 double xmin = [self xpt:0];
                 double xmax = [self xpt:1];
-                CGContextMoveToPoint(context, xmin, y);
-                CGContextAddLineToPoint(context, xmax, y);
-                CGContextDrawPath(context, kCGPathStroke);
+                [bp moveToPoint:CGPointMake(xmin, y)];
+                [bp addLineToPoint:CGPointMake(xmax, y)];
                 
-                //reord the values for labels
+                //record the values for labels
                 NSString* vStr;
                 if (floor(v)==v) {
                     vStr = [NSString stringWithFormat:@"%d",(int) v];
@@ -714,11 +772,10 @@
                 double y = [self ypt:p];
                 double xmin = [self xpt:0];
                 double xmax = [self xpt:1];
-                CGContextMoveToPoint(context, xmin, y);
-                CGContextAddLineToPoint(context, xmax, y);
-                CGContextDrawPath(context, kCGPathStroke);
+                [bp moveToPoint:CGPointMake(xmin, y)];
+                [bp addLineToPoint:CGPointMake(xmax, y)];
                 
-                //reord the values for labels
+                //record the values for labels
                 NSString* vStr;
                 if (floor(v)==v) {
                     vStr = [NSString stringWithFormat:@"%d",(int) v];
@@ -730,8 +787,8 @@
             }
         }
         
-        
-        
+        mylayer.path = [bp CGPath];
+        [self.layer addSublayer:mylayer];
     }
 }
 
