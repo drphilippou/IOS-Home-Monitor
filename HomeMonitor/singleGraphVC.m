@@ -16,12 +16,15 @@
     
     IOSTimeFunctions* TF;
     HMdataStore* DB;
+    NSArray* fieldKeys;
 }
 @property (weak, nonatomic) IBOutlet LinePlotView *plot;
 @property (nonatomic,strong) NSString* fieldName;
 
 - (IBAction)pinchAction:(UIPinchGestureRecognizer *)sender;
 - (IBAction)panAction:(UIPanGestureRecognizer *)sender;
+- (IBAction)tapAction:(UITapGestureRecognizer *)sender;
+- (IBAction)swipeAction:(UISwipeGestureRecognizer *)sender;
 
 @end
 
@@ -35,12 +38,28 @@
     //init variables
     TF = [[IOSTimeFunctions alloc] init];
     DB = [HMdataStore defaultStore];
+    fieldKeys = @[@"ZoeRoomHumidity",
+                  @"keliiRoomHumidity",
+                  @"zoeDehumidPower",
+                  @"keliiDehumidPower",
+                  @"homePower",
+                  @"homeEnergy",
+                  @"pvSurplus",
+                  @"dehumidEnergy",
+                  @"currPVPower",
+                  @"pvEnergyToday",
+                  @"pvPred"];
+    
     
     //start sending orientation notifications
     [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
     
     //redraw the view on rotation rather then scale
     self.view.contentMode = UIViewContentModeRedraw;
+    
+    //try to add another button
+    UIBarButtonItem* b = [[UIBarButtonItem alloc] initWithTitle:@"next" style:UIBarButtonItemStylePlain target:self action:@selector(switchPlots)];
+    self.navigationItem.rightBarButtonItem = b;
 }
 
 
@@ -53,6 +72,7 @@
     //define the plot basics
     self.plot.gridYIncrement = 1;
     self.plot.fillLinePlot = TRUE;
+    self.plot.createBoxPlot = false;
     
     
     //get the data
@@ -78,6 +98,7 @@
         self.plot.gridYIncrement = 1000;
         [self.plot setYMinValue:0];
         
+        
     } else if ([self.buttonTitle containsString:@"Home\n(kwh)"]) {
         //this is home energy
         self.fieldName = @"homeEnergy";
@@ -100,6 +121,7 @@
     } else if ([self.buttonTitle containsString:@"Curr PV"]) {
         self.fieldName = @"currPVPower";
         self.plot.gridYIncrement = 1000;
+        self.plot.smoothingSamples = [NSNumber numberWithInt:10];
         
     } else if ([self.buttonTitle containsString:@"Daily PV"]) {
         self.fieldName = @"pvEnergyToday";
@@ -133,6 +155,34 @@
     [super viewWillDisappear:animated];
     
     [[NSNotificationCenter defaultCenter]removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
+}
+
+
+//happens when the nxt button is pressed in the navigation controller
+-(void)switchPlots {
+    NSLog(@"switchPlots");
+    
+    for (NSString* ns in fieldKeys) {
+        if ([self.fieldName isEqualToString:ns]) {
+            long idx = [fieldKeys indexOfObject:ns];
+            if (ns != [fieldKeys lastObject]) {
+                self.fieldName = fieldKeys[idx+1];
+                break;
+            } else {
+                self.fieldName = [fieldKeys firstObject];
+                break;
+            }
+        }
+    }
+    
+
+        
+    //redraw the plot
+    self.navigationItem.title = self.fieldName;
+    [self.plot reset];
+    [self updatePlot];
+    [self.plot setNeedsDisplay];
+    
 }
 
 - (IBAction)pinchAction:(UIPinchGestureRecognizer *)sender {
@@ -220,6 +270,13 @@
     }
 }
 
+- (IBAction)tapAction:(UITapGestureRecognizer *)sender {
+}
+
+- (IBAction)swipeAction:(UISwipeGestureRecognizer *)sender {
+    NSLog(@"did swipe");
+}
+
 PinchAxis pinchGestureRecognizerAxis(UIPinchGestureRecognizer *r) {
     if (r.numberOfTouches == 2) {
         UIView *view = r.view;
@@ -292,15 +349,15 @@ PinchAxis pinchGestureRecognizerAxis(UIPinchGestureRecognizer *r) {
     
     self.plot.xVals = xv;
     self.plot.yVals = yv;
-    self.plot.backgroundColor = [UIColor lightGrayColor];
+    //self.plot.backgroundColor = [UIColor lightGrayColor];
     self.plot.showYAxisValues = TRUE;
     
     if (xv.count >0) {
         //plot the values in the margin
         self.plot.leftSideMargin = 30;
         self.plot.topMargin = 10;
-        self.plot.bottomMargin = 20;
-        self.plot.rightSideMargin = 50;
+        self.plot.bottomMargin = 40;
+        self.plot.rightSideMargin = 40;
         self.plot.showValues = true;
         NSMutableDictionary* mv = [[NSMutableDictionary alloc] init];
         [mv setObject:@{@"value":[yv lastObject],

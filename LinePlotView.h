@@ -13,9 +13,15 @@
 @property (nonatomic)BOOL useGrid;
 @property (nonatomic)double gridYIncrement;
 @property (nonatomic)CGContextRef ctx;
+
+
 @property (nonatomic,copy) NSArray* xVals;
 @property (nonatomic,copy) NSArray* yVals;
 @property (nonatomic,copy) NSArray* y2Vals;  //not used yet
+@property (nonatomic,copy) UIColor* yColor;
+@property (nonatomic,copy) UIColor* y2Color;
+
+
 @property (nonatomic)double xMin;
 @property (nonatomic)double xMax;
 @property (nonatomic)double yMin;
@@ -34,8 +40,14 @@
 
 @property (nonatomic) BOOL showYAxisValues;
 
-
+//fills the line plot
 @property (nonatomic) BOOL fillLinePlot;
+
+//create a box plot
+@property (nonatomic) BOOL createBoxPlot;
+
+//smooth the line using moving average
+@property (nonatomic,strong) NSNumber* smoothingSamples;
 
 -(id)initWithFrame:(CGRect)f Data:(NSArray*)data;
 -(void)setYMinValue:(double)yMin;

@@ -251,10 +251,13 @@
     
     if (DM.newDataAvailable) {
         
+        //reset the plot view to line plot as default
+        self.lpv.createBoxPlot = false;
+        
         //grab the latest data
         HMData* d = [DB getLatestHMData];
         lastestUpdateTime = d.secs;
-        self.timeLabel.text = d.time ;
+        self.timeLabel.text = [d.time substringWithRange:NSMakeRange(0, 8)];
         self.dateLabel.text = d.date;
         
         // define the colors
@@ -436,30 +439,35 @@
     //[self.lpv setYMaxValue:8000];
     [self.lpv setYMinValue:0];
     self.lpv.gridYIncrement = 1000;
+    self.lpv.createBoxPlot = TRUE;
     
     //extract the data
     NSArray* yv = [DB getFieldAsString:@"homePower" sinceSec:ls-secs];
     NSArray* xv = [DB getFieldAsString:@"secs" sinceSec:ls-secs];
     NSArray* y2v = [DB getFieldAsString:@"currPVPower" sinceSec:ls-secs];
     
+    //configure the plot
     self.lpv.xVals = xv;
     self.lpv.yVals = yv;
     self.lpv.y2Vals = y2v;
     self.lpv.backgroundColor = [UIColor lightGrayColor];
+    self.lpv.yColor = [UIColor yellowColor];
+    self.lpv.y2Color = [UIColor redColor];
     
     //plot the values in the margin
     self.lpv.rightSideMargin = 40;
     self.lpv.showValues = true;
     NSMutableDictionary* mv = [[NSMutableDictionary alloc] init];
+    [mv setObject:@{@"value":[y2v lastObject],
+                    @"position":@"0.25",
+                    @"height":[NSNumber numberWithInt:20],
+                    @"color":[UIColor yellowColor]} forKey:@"mid"];
+    
     [mv setObject:@{@"value":[yv lastObject],
                     @"position":@"0.0",
                     @"height":[NSNumber numberWithInt:20],
                     @"color":[UIColor redColor]} forKey:@"top"];
     
-    [mv setObject:@{@"value":[y2v lastObject],
-                    @"position":@"0.25",
-                    @"height":[NSNumber numberWithInt:20],
-                    @"color":[UIColor blueColor]} forKey:@"mid"];
     self.lpv.marginValues = mv;
     
     

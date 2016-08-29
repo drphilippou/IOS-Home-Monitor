@@ -461,24 +461,28 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="OJx-mg-d8U" customClass="LinePlotView">
-                                <rect key="frame" x="27" y="91" width="367" height="610"/>
+                                <rect key="frame" x="20" y="64" width="374" height="672"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <gestureRecognizers/>
                                 <connections>
                                     <outletCollection property="gestureRecognizers" destination="hoX-Z9-OYq" appends="YES" id="Heu-mn-hYb"/>
                                     <outletCollection property="gestureRecognizers" destination="cxf-th-Eo6" appends="YES" id="5O8-t5-Ga0"/>
+                                    <outletCollection property="gestureRecognizers" destination="5gc-du-pOX" appends="YES" id="yBV-4x-yPi"/>
+                                    <outletCollection property="gestureRecognizers" destination="WoD-DI-HMj" appends="YES" id="Vnr-Ag-X5y"/>
                                 </connections>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
                         <constraints>
-                            <constraint firstItem="OJx-mg-d8U" firstAttribute="trailing" secondItem="ZmL-wi-Pyd" secondAttribute="trailingMargin" id="D15-kU-gGO"/>
-                            <constraint firstItem="9OY-sp-bgK" firstAttribute="top" secondItem="OJx-mg-d8U" secondAttribute="bottom" constant="35" id="VBh-tf-Z1K"/>
-                            <constraint firstItem="OJx-mg-d8U" firstAttribute="leading" secondItem="ZmL-wi-Pyd" secondAttribute="leadingMargin" constant="10" id="WUl-I6-Wtx"/>
-                            <constraint firstItem="OJx-mg-d8U" firstAttribute="top" secondItem="4j0-AL-NSw" secondAttribute="bottom" constant="30" id="nU1-lS-QVC"/>
+                            <constraint firstItem="OJx-mg-d8U" firstAttribute="trailing" secondItem="ZmL-wi-Pyd" secondAttribute="trailingMargin" id="H3t-1x-xg7"/>
+                            <constraint firstItem="9OY-sp-bgK" firstAttribute="top" secondItem="OJx-mg-d8U" secondAttribute="bottom" id="l8Q-Kr-Zo6"/>
+                            <constraint firstItem="OJx-mg-d8U" firstAttribute="top" secondItem="4j0-AL-NSw" secondAttribute="bottom" id="pFR-Vg-WaZ"/>
+                            <constraint firstItem="OJx-mg-d8U" firstAttribute="leading" secondItem="ZmL-wi-Pyd" secondAttribute="leadingMargin" id="rYc-iu-PTp"/>
                         </constraints>
                     </view>
+                    <toolbarItems/>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="plot" destination="OJx-mg-d8U" id="gAX-jq-YXf"/>
                     </connections>
@@ -489,11 +493,21 @@
                         <action selector="pinchAction:" destination="J3q-lH-jBZ" id="h9E-ZN-rKn"/>
                     </connections>
                 </pinchGestureRecognizer>
-                <panGestureRecognizer minimumNumberOfTouches="1" id="cxf-th-Eo6">
+                <panGestureRecognizer minimumNumberOfTouches="1" maximumNumberOfTouches="1" id="cxf-th-Eo6">
                     <connections>
                         <action selector="panAction:" destination="J3q-lH-jBZ" id="Nqo-AP-680"/>
                     </connections>
                 </panGestureRecognizer>
+                <tapGestureRecognizer id="5gc-du-pOX">
+                    <connections>
+                        <action selector="tapAction:" destination="J3q-lH-jBZ" id="3m1-h0-Ahw"/>
+                    </connections>
+                </tapGestureRecognizer>
+                <swipeGestureRecognizer direction="right" numberOfTouchesRequired="2" id="WoD-DI-HMj">
+                    <connections>
+                        <action selector="swipeAction:" destination="J3q-lH-jBZ" id="Sx4-lS-OmA"/>
+                    </connections>
+                </swipeGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="1821" y="306"/>
         </scene>

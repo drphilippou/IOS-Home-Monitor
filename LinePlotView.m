@@ -81,6 +81,20 @@
     return _y2Vals;
 }
 
+-(UIColor*)yColor {
+    if (!_yColor) {
+        _yColor = [UIColor redColor];
+    }
+    return _yColor;
+}
+
+-(UIColor*)y2Color {
+    if (!_y2Color) {
+        _y2Color = [UIColor blueColor];
+    }
+    return _y2Color;
+}
+
 -(void)setYMinValue:(double)yMin {
     _yMin = yMin;
     self.customYMinLimits = true;
@@ -169,6 +183,8 @@
     self.marginValues = nil;
     self.showValues = false;
     self.yLabels = nil;
+    self.yColor = nil;
+    self.y2Color = nil;
 }
 
 
@@ -198,7 +214,6 @@
     //draw the layers in the right order
     NSArray* sl = [self.layer.sublayers copy];
     for (CALayer* l in sl) {
-        NSLog(@"layer %@",l.description);
         [l removeFromSuperlayer];
     }
     
@@ -357,7 +372,97 @@
     }
 }
 
+-(void)boxPlotXV:(NSArray*)xv YV:(NSArray*)yv Color:(UIColor*)color {
+    int finalYPos = 0;
+    double finalYVal = 0;
+    
+    
+    double ysum = 0;
+    double num = 0;
+    long indx = 0;
+    long factor = 10;
+    NSTimeInterval vxl = 0;
+    NSTimeInterval vxh = 0;
+    for (long i=0 ; i<yv.count ; i++) {
+        ysum += [yv[i] doubleValue];
+        num += 1.0;
+        
+        if (vxl ==0 ) vxl = [xv[i] doubleValue];
+        vxh = [xv[i] doubleValue];
+        
+        if (++indx%factor == 0) {
+            if (num>0) {
+                double vy = ysum/num;
+                double pxl = (vxl-self.xMin)/(self.xMax - self.xMin);
+                double pxh = (vxh-self.xMin)/(self.xMax - self.xMin);
+                double py = 1.0 - (vy - self.yMin)/(self.yMax - self.yMin);
+                double y = [self ypt:py];
+                double yl = [self ypt:1];
+                double xl = [self xpt:pxl];
+                double xh = [self xpt:pxh];
+                finalYVal = vy;
+                finalYPos = (int) y;
+                
+                //NSLog(@"create a box here %d %f %f %f",indx,y,xl,xh);
+                CAShapeLayer* ml = [[CAShapeLayer alloc] init];
+                UIBezierPath* bp = [[UIBezierPath alloc]init];
+                [bp moveToPoint:CGPointMake(xl, yl)];
+                [bp addLineToPoint:CGPointMake(xl, y)];
+                [bp addLineToPoint:CGPointMake(xh, y)];
+                [bp addLineToPoint:CGPointMake(xh, yl)];
+                [bp closePath];
+                ml.path = [bp CGPath];
+                ml.strokeColor = [[UIColor blackColor] CGColor];
+                ml.fillColor = [color CGColor];
+                [self.layer addSublayer:ml];
+
+                
+                
+            }
+            ysum = 0;
+            vxl = 0;
+            vxh = 0;
+            num = 0;
+        }
+    }
+    if (num>0) {
+        double vy = ysum/num;
+        //double vx = xsum/num;
+        double pxl = (vxl-self.xMin)/(self.xMax - self.xMin);
+        double pxh = (vxh-self.xMin)/(self.xMax - self.xMin);
+        double py = 1.0 - (vy - self.yMin)/(self.yMax - self.yMin);
+        double y = [self ypt:py];
+        double yl = [self ypt:1];
+        double xl = [self xpt:pxl];
+        double xh = [self xpt:pxh];
+        finalYVal = vy;
+        finalYPos = (int) y;
+        
+        
+        //NSLog(@"create a box here %d %f %f %f",indx,y,xl,xh);
+        CAShapeLayer* ml = [[CAShapeLayer alloc] init];
+        UIBezierPath* bp = [[UIBezierPath alloc]init];
+        [bp moveToPoint:CGPointMake(xl, yl)];
+        [bp addLineToPoint:CGPointMake(xl, y)];
+        [bp addLineToPoint:CGPointMake(xh, y)];
+        [bp addLineToPoint:CGPointMake(xh, yl)];
+        [bp closePath];
+        ml.path = [bp CGPath];
+        ml.strokeColor = [[UIColor blackColor] CGColor];
+        ml.fillColor = [color CGColor];
+        [self.layer addSublayer:ml];
+    }
+    
+    //add an entry so we can label the final value automatically
+    [self.finalYValues addObject:@{@"posint":[NSNumber numberWithInteger:finalYPos],
+                                   @"color":color,
+                                   @"value":[NSNumber numberWithDouble:finalYVal]}];
+
+    
+}
+
 -(void)scatterPlotXV:(NSArray*)xv YV:(NSArray*) yv Color:(UIColor*)color {
+    
     UIBezierPath* bp = [[UIBezierPath alloc] init];
     
     double rangex = _xMax - _xMin;
@@ -388,6 +493,22 @@
         vx = [vsx doubleValue];
         vy = [vsy doubleValue];
         
+        //test if smoothing is on
+        if (self.smoothingSamples) {
+            int ss = [self.smoothingSamples intValue];
+            double sum = 0.0;
+            double num = 0.0;
+            for (long ii = i-ss/2 ; ii< i+ss/2 ; ii++) {
+                if (ii>=0 && ii<yv.count) {
+                    sum += [yv[ii] doubleValue];
+                    num += 1.0;
+                }
+            }
+            if (num>0) {
+                vy = sum/num;
+            }
+        }
+        
         px = (vx - _xMin)/rangex;
         py = 1.0 - (vy - _yMin)/rangey;
         
@@ -408,7 +529,7 @@
                                    @"color":color,
                                    @"value":[NSNumber numberWithDouble:finalYVal]}];
 
-
+    
     CAShapeLayer* mylayer = [self getMaskedLayer];
     mylayer.strokeColor = [color CGColor];
     
@@ -512,25 +633,28 @@
     if (self.xVals.count < self.yVals.count) {
         //line plot
         if (self.y2Vals.count==0) {
-            [self linePlot:self.yVals Color:[UIColor redColor]];
+            [self linePlot:self.yVals Color:self.yColor];
         } else {
-            [self linePlot:self.yVals Color:[UIColor redColor]];
-            [self linePlot:self.y2Vals Color:[UIColor blueColor]];
+            [self linePlot:self.yVals Color:self.yColor];
+            [self linePlot:self.y2Vals Color:self.y2Color];
         }
 
     } else {
         //scatter plot
         if (self.y2Vals.count == 0) {
-            [self scatterPlotXV:self.xVals
-                             YV:self.yVals
-                          Color:[UIColor redColor]];
+            if (self.createBoxPlot) {
+                [self boxPlotXV:self.xVals YV:self.yVals Color:self.yColor];
+            } else {
+                [self scatterPlotXV:self.xVals YV:self.yVals Color:self.yColor];
+            }
         } else {
-            [self scatterPlotXV:self.xVals
-                             YV:self.yVals
-                          Color:[UIColor redColor]];
-            [self scatterPlotXV:self.xVals
-                             YV:self.y2Vals
-                          Color:[UIColor blueColor]];
+            if (self.createBoxPlot) {
+                [self boxPlotXV:self.xVals YV:self.y2Vals Color:self.y2Color];
+            } else {
+                [self scatterPlotXV:self.xVals  YV:self.y2Vals Color:self.y2Color];
+            }
+            
+            [self scatterPlotXV:self.xVals YV:self.yVals Color:self.yColor];
             
         }
     }
@@ -595,6 +719,13 @@
 
 
 -(void)drawXGrid {
+    
+    double ymin = [self ypt:0];
+    double ymax = [self ypt:1];
+    double xmin = [self xpt:0];
+    double xmax = [self xpt:1];
+    
+    //remove the old labels
     for (UIView* uiv in self.xAxisLabelSubviews) {
         [uiv removeFromSuperview];
     }
@@ -602,94 +733,131 @@
     
     UIBezierPath* bp = [[UIBezierPath alloc] init];
     
-    if (self.gridYIncrement != 0) {
-        
-        CAShapeLayer* mylayer = [self getMaskedLayer];
-        mylayer.lineDashPattern = [NSArray arrayWithObjects:[NSNumber numberWithInt:1], [NSNumber numberWithInt:2], nil];
-        
-        mylayer.lineWidth  = 0.5;
-        mylayer.strokeColor = [[UIColor blackColor] CGColor];
-        
-        NSArray* timeLimits = @[[NSNumber numberWithDouble:60.0],
-                                [NSNumber numberWithDouble:300.0],
-                                [NSNumber numberWithDouble:600.0],
-                                [NSNumber numberWithDouble:15.0*60.0],
-                                [NSNumber numberWithDouble:3600.0],
-                                [NSNumber numberWithDouble:2.0*3600.0],
-                                [NSNumber numberWithDouble:4.0*3600.0],
-                                [NSNumber numberWithDouble:6.0*3600.0],
-                                [NSNumber numberWithDouble:12.0*3600.0],
-                                [NSNumber numberWithDouble:86400.0],
-                                [NSNumber numberWithDouble:2.0*86400.0],
-                                [NSNumber numberWithDouble:4.0*86400.0],
-                                [NSNumber numberWithDouble:7.0*86400.0]];
-        
-        
-        NSArray* timeFormats = @[@"HH:mm", @"HH:mm", @"HH:mm",@"HH:mm", @"H", @"H",   @"H",   @"H",   @"H",   @"MM/dd",   @"MM/dd",   @"MM/dd",   @"MM/dd"];
-        
-        
-        double rangex = _xMax - _xMin;
-        
-        //determine the number of grids at each time scale
-        NSMutableArray* numGrids = [[NSMutableArray alloc] init];
-        for (NSNumber *tl in timeLimits) {
-            double ng = rangex/[tl doubleValue];
-            [numGrids addObject:[NSNumber numberWithDouble:ng]];
-        }
-        
-        //determine the optimal time scale
-        int indx = 0;
-        for (NSNumber* ng in numGrids) {
-            if ([ng doubleValue] <8 ) {
-                indx = (int) [numGrids indexOfObject:ng];
-                break;
-            }
-        }
-        double gridXIncrement = [timeLimits[indx] doubleValue];
-        NSLog(@"best index %d with ng %f",indx,[numGrids[indx] doubleValue]);
     
-        //get an epoch date for starting the increment
-        NSDateFormatter *parsingFormatter = [NSDateFormatter new];
-        [parsingFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZ"];
-        NSDate *date = [parsingFormatter dateFromString:@"2016-01-01T00:00:00-10:00"];
-        NSTimeInterval startTimeJanFirst = [date timeIntervalSince1970];
-        
-        
-        NSLog(@"final grid increment = %f", gridXIncrement);
-        for (double v=startTimeJanFirst ; v<self.xMax;  v += gridXIncrement) {
-            if (v>self.xMin) {
-                double p = (v - _xMin)/rangex;
-                double x = [self xpt:p];
-                double ymin = [self ypt:0];
-                double ymax = [self ypt:1];
-                [bp moveToPoint:CGPointMake(x, ymin)];
-                [bp addLineToPoint:CGPointMake(x, ymax)];
-                mylayer.path = [bp CGPath];
-                [self.layer addSublayer:mylayer];
-                
-                
-                
-                NSDate *epochNSDate = [[NSDate alloc] initWithTimeIntervalSince1970:v];
-                NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-                NSString* dst = [timeFormats objectAtIndex:indx];
-                [dateFormatter setDateFormat:dst];
-                NSTimeZone* TZ = [NSTimeZone timeZoneWithName:@"HST"];
-                [dateFormatter setTimeZone:TZ];
-                NSString* datestr =[dateFormatter stringFromDate:epochNSDate];
-                NSLog (@"Epoch time %f equates to %@", v, datestr );
-
-                
-
-                UILabel* l = [[UILabel alloc] initWithFrame:CGRectMake(x-15, ymax, 30, self.bottomMargin)];
-                l.adjustsFontSizeToFitWidth = true;
-                l.textColor = [UIColor blackColor];
-                l.text = datestr;
-                [self addSubview:l];
-                [self.xAxisLabelSubviews addObject:l];
-
-            }
+    //define the dashed grid line
+    CAShapeLayer* mylayer = [self getMaskedLayer];
+    mylayer.lineDashPattern = [NSArray arrayWithObjects:[NSNumber numberWithInt:1], [NSNumber numberWithInt:2], nil];
+    mylayer.lineWidth  = 0.5;
+    mylayer.strokeColor = [[UIColor blackColor] CGColor];
+    
+    //define the different configurations
+    NSArray* timeLimits = @[[NSNumber numberWithDouble:60.0],
+                            [NSNumber numberWithDouble:300.0],
+                            [NSNumber numberWithDouble:600.0],
+                            [NSNumber numberWithDouble:15.0*60.0],
+                            [NSNumber numberWithDouble:30.0*60.0],
+                            [NSNumber numberWithDouble:3600.0],
+                            [NSNumber numberWithDouble:2.0*3600.0],
+                            [NSNumber numberWithDouble:4.0*3600.0],
+                            [NSNumber numberWithDouble:6.0*3600.0],
+                            [NSNumber numberWithDouble:12.0*3600.0],
+                            [NSNumber numberWithDouble:86400.0],
+                            [NSNumber numberWithDouble:2.0*86400.0],
+                            [NSNumber numberWithDouble:4.0*86400.0],
+                            [NSNumber numberWithDouble:7.0*86400.0]];
+    
+    
+    NSArray* timeFormats = @[@"HH:mm", @"HH:mm", @"HH:mm",@"HH:mm",@"HH:mm", @"H", @"H",   @"H",   @"H",   @"H",   @"MM/dd",   @"MM/dd",   @"MM/dd",   @"MM/dd"];
+    
+    //compute the date ranges
+    double rangex = _xMax - _xMin;
+    NSString* minDateStr = [self getDateStringFrom1970Sec:self.xMin];
+    NSString* maxDateStr = [self getDateStringFrom1970Sec:self.xMax];
+    bool sameDay = false;
+    if ([minDateStr isEqualToString:maxDateStr]) {
+        sameDay = true;
+    }
+    
+    //determine the number of grids at each time scale
+    NSMutableArray* numGrids = [[NSMutableArray alloc] init];
+    for (NSNumber *tl in timeLimits) {
+        double ng = rangex/[tl doubleValue];
+        [numGrids addObject:[NSNumber numberWithDouble:ng]];
+    }
+    
+    //determine the optimal time scale
+    int indx = 0;
+    for (NSNumber* ng in numGrids) {
+        if ([ng doubleValue] <8 ) {
+            indx = (int) [numGrids indexOfObject:ng];
+            break;
         }
     }
+    double gridXIncrement = [timeLimits[indx] doubleValue];
+    NSLog(@"best index %d with ng %f",indx,[numGrids[indx] doubleValue]);
+    
+    //get an epoch date for starting the increment
+    NSDateFormatter *parsingFormatter = [NSDateFormatter new];
+    [parsingFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZ"];
+    NSDate *date = [parsingFormatter dateFromString:@"2016-01-01T00:00:00-10:00"];
+    NSTimeInterval startTimeJanFirst = [date timeIntervalSince1970];
+    
+    
+    NSLog(@"final grid increment = %f", gridXIncrement);
+    for (double v=startTimeJanFirst ; v<self.xMax;  v += gridXIncrement) {
+        if (v>self.xMin) {
+            double p = (v - _xMin)/rangex;
+            double x = [self xpt:p];
+            [bp moveToPoint:CGPointMake(x, ymin)];
+            [bp addLineToPoint:CGPointMake(x, ymax)];
+            mylayer.path = [bp CGPath];
+            [self.layer addSublayer:mylayer];
+            
+            
+            //format the grid date str
+            NSDate *epochNSDate = [[NSDate alloc] initWithTimeIntervalSince1970:v];
+            NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+            NSString* dst = [timeFormats objectAtIndex:indx];
+            [dateFormatter setDateFormat:dst];
+            NSTimeZone* TZ = [NSTimeZone timeZoneWithName:@"HST"];
+            [dateFormatter setTimeZone:TZ];
+            NSString* datestr =[dateFormatter stringFromDate:epochNSDate];
+
+            
+            UILabel* l = [[UILabel alloc] initWithFrame:CGRectMake(x-15, ymax, 30, 20)];
+            l.adjustsFontSizeToFitWidth = true;
+            l.textColor = [UIColor blackColor];
+            l.text = datestr;
+            [self addSubview:l];
+            [self.xAxisLabelSubviews addObject:l];
+            
+        }
+    }
+    if (indx <10) {
+        if (sameDay) {
+            UILabel* l = [[UILabel alloc] initWithFrame:CGRectMake((((xmax-xmin)/2)+xmin)-15, ymax+15, 40,30)];
+            l.adjustsFontSizeToFitWidth = true;
+            l.textColor = [UIColor blackColor];
+            l.text = minDateStr;
+            [self addSubview:l];
+            [self.xAxisLabelSubviews addObject:l];
+        } else {
+            UILabel* l = [[UILabel alloc] initWithFrame:CGRectMake(xmin-15, ymax+15, 40, 30)];
+            l.adjustsFontSizeToFitWidth = true;
+            l.textColor = [UIColor blackColor];
+            l.text = minDateStr;
+            [self addSubview:l];
+            [self.xAxisLabelSubviews addObject:l];
+            UILabel* l2 = [[UILabel alloc] initWithFrame:CGRectMake(xmax-15, ymax+15, 40, 30)];
+            l2.adjustsFontSizeToFitWidth = true;
+            l2.textColor = [UIColor blackColor];
+            l2.text = maxDateStr;
+            [self addSubview:l2];
+            [self.xAxisLabelSubviews addObject:l2];
+        }
+    }
+    
+}
+
+-(NSString*)getDateStringFrom1970Sec:(NSTimeInterval) sec {
+    NSDate *epochNSDate = [[NSDate alloc] initWithTimeIntervalSince1970:sec];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    NSString* dst = @"MM/dd";
+    [dateFormatter setDateFormat:dst];
+    NSTimeZone* TZ = [NSTimeZone timeZoneWithName:@"HST"];
+    [dateFormatter setTimeZone:TZ];
+    NSString* datestr =[dateFormatter stringFromDate:epochNSDate];
+    return datestr;
 }
 
 
@@ -703,39 +871,30 @@
         mylayer.lineDashPattern = [NSArray arrayWithObjects:[NSNumber numberWithInt:1], [NSNumber numberWithInt:2], nil];
         
         double rangey = _yMax - _yMin;
-        int exponent = (int) log10(rangey);       // See comment below.
+        int exponent = (int) log10(rangey);
         double magnitude = pow(10, exponent);
-        //NSLog(@"original values r=%f e=%d m=%d",rangey,exponent,magnitude);
-        
         double ng = rangey/magnitude;
         double multi = 1;
-        //NSLog(@"original ngrids = %f", ng);
         if (ng < 4 ) {
             ng  = rangey/(magnitude/2);
             multi = 2;
-            //NSLog(@"   -multi %f ngrids = %f",multi, ng);
             if (ng <4 ) {
                 ng = rangey/(magnitude/4);
                 multi = 4;
-                //NSLog(@"   -multi %f ngrids = %f",multi, ng);
                 if (ng <4 ) {
                     ng = rangey/(magnitude/5);
                     multi = 5;
-                    //NSLog(@"   -multi %f ngrids = %f",multi, ng);
                 }
             }
         } else if ( ng>8 ){
             ng  = rangey/(magnitude*2);
             multi = 1.0/2.0;
-            //NSLog(@"   +multi %f ngrids = %f",multi, ng);
             if (ng >8 ) {
                 ng = rangey/(magnitude*4);
                 multi = 1.0/4.0;
-                //NSLog(@"   +multi %f ngrids = %f",multi, ng);
                 if (ng >8 ) {
                     ng = rangey/(magnitude*5);
                     multi = 1.0/5.0;
-                    //NSLog(@"   +multi %f ngrids = %f",multi, ng);
                 }
             }
         }
